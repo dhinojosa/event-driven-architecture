@@ -1,5 +1,5 @@
 {
-  "java.home": "/home/vscode/.sdkman/candidates/java/current",
+  "java.jdt.ls.java.home": "/home/vscode/.sdkman/candidates/java/current",
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-21",
@@ -7,5 +7,7 @@
     }
   ],
   "docker.dockerPath": "/usr/bin/docker",
-  "docker.showExplorer": true
+  "docker.showExplorer": true,
+  "containers.containerCommand": "/usr/bin/docker",
+  "extensions.ignoreRecommendations": true
 }
