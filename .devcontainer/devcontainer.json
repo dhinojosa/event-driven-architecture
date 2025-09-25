@@ -13,7 +13,7 @@
     }
   },
   "runArgs": ["--privileged"],
-  "postCreateCommand": "curl -s https://get.sdkman.io | bash && source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java 21.0.3-tem",
+  "postCreateCommand": "bash -c 'curl -s https://get.sdkman.io | bash && source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java 21.0.3-tem < /dev/null'",
   "customizations": {
     "vscode": {
       "extensions": [
