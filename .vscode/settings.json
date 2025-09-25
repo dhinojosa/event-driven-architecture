@@ -1,3 +1,11 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "java.home": "/home/vscode/.sdkman/candidates/java/current",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "/home/vscode/.sdkman/candidates/java/current"
+    }
+  ],
+  "docker.dockerPath": "/usr/bin/docker",
+  "docker.showExplorer": true
 }
