@@ -12,9 +12,6 @@
       "version": "latest"
     }
   },
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
   "runArgs": ["--privileged"],
   "postCreateCommand": "curl -s https://get.sdkman.io | bash && source $HOME/.sdkman/bin/sdkman-init.sh && sdk install java 21.0.3-tem",
   "customizations": {
