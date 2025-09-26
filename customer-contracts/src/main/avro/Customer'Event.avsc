@@ -1,0 +1,38 @@
+{
+    "type": "record",
+    "name": "CustomerEventMessage",
+    "namespace": "com.evolutionnext.adapter.out",
+    "fields": [
+        {
+            "name": "customerId",
+            "type": "string"
+        },
+        {
+            "name": "timestamp",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        },
+        {
+            "name": "eventType",
+            "type": {
+                "type": "enum",
+                "name": "EventType",
+                "symbols": [
+                    "CUSTOMER_CREATED",
+                    "CUSTOMER_UPDATED",
+                    "CUSTOMER_DELETED"
+                ]
+            }
+        },
+        {
+            "name": "event",
+            "type": [
+                "com.evolutionnext.adapter.out.OrderPlacedMessage",
+                "com.evolutionnext.adapter.out.OrderCancelledMessage",
+                "com.evolutionnext.adapter.out.OrderCreatedMessage"
+            ]
+        }
+    ]
+}
