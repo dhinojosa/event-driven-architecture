@@ -17,12 +17,15 @@
         <module>customers</module>
         <module>order-contracts</module>
         <module>customer-contracts</module>
+        <module>products</module>
+        <module>product-contracts</module>
+        <module>orders-customer-consumer</module>
+        <module>orders-product-consumer</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <kafka.version>4.1.0</kafka.version>
         <avro.version>1.12.0</avro.version>
         <confluent.version>7.9.2</confluent.version>

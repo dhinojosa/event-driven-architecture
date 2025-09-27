@@ -1,0 +1,34 @@
+{
+    "type": "record",
+    "name": "CustomerCreatedMessage",
+    "namespace": "com.evolutionnext.customers",
+    "fields": [
+        {
+            "name": "customerId",
+            "type": "string"
+        },
+        {
+            "name": "timestamp",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        },
+        {
+            "name": "firstName",
+            "type": "string"
+        },
+        {
+            "name": "lastName",
+            "type": "string"
+        },
+        {
+            "name": "email",
+            "type": "string"
+        },
+        {
+            "name": "state",
+            "type": "string"
+        }
+    ]
+}

@@ -1,9 +1,13 @@
 package com.evolutionnext;
 
-
-import com.evolutionnext.adapter.out.OrderEventKafkaPublisher;
-import com.evolutionnext.domain.aggregate.*;
-import com.evolutionnext.domain.application.OrderApplicationService;
+import com.evolutionnext.orders.application.command.CreateOrder;
+import com.evolutionnext.orders.application.service.OrderApplicationService;
+import com.evolutionnext.orders.domain.aggregate.customer.CustomerId;
+import com.evolutionnext.orders.domain.aggregate.order.Order;
+import com.evolutionnext.orders.domain.aggregate.order.OrderId;
+import com.evolutionnext.orders.domain.aggregate.order.OrderItem;
+import com.evolutionnext.orders.domain.aggregate.product.ProductId;
+import com.evolutionnext.orders.infrastructure.out.OrderEventKafkaPublisher;
 
 import java.util.Random;
 import java.util.UUID;
@@ -29,15 +33,11 @@ public class Runner {
             String[] states = stateString.split(",");
             String state = states[random.nextInt(states.length)];
             int amount = random.nextInt(300) + 1;
-            long productId = random.nextLong(2000L) + 1L;
-            long customerId = random.nextLong(120L) + 1L;
+            UUID productId = UUID.randomUUID();
+            UUID customerId = UUID.randomUUID();
             int quantity = random.nextInt(20) + 1;
 
-            Order order = Order.create(new OrderId(UUID.randomUUID().toString()), new CustomerId(String.valueOf(customerId)), state);
-            order.addOrderItem(new OrderItem(new ProductId(productId), quantity, amount));
-            order.placeOrder();
-
-            orderApplicationService.submit(order);
+            orderApplicationService.submit(new CreateOrder(new OrderId(UUID.randomUUID()), new CustomerId(UUID.randomUUID())));
 
             Thread.sleep(random.nextInt(30000 - 1000 + 1) + 1000);
         }

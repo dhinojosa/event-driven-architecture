@@ -1,0 +1,15 @@
+{
+    "type": "record",
+    "name": "ProductCreated",
+    "namespace": "com.evolutionnext.products.events",
+    "fields": [
+        {
+            "name": "name",
+            "type": "string"
+        },
+        {
+            "name": "price",
+            "type": "double"
+        }
+    ]
+}
