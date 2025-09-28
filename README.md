@@ -1,6 +1,6 @@
 # NFJS Event-Driven Architecture
 
-[![Open in GitHub Codespaces](https://codespaces.new/dhinojosa/event-driven-architecture/tree/main?hide_repo_select=true&ref=main&repo=748638957&machine=standardLinux32gb)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new/dhinojosa/event-driven-architecture?hide_repo_select=true&ref=main&repo=748638957&machine=standardLinux32gb)
 
 ## Introduction
 
