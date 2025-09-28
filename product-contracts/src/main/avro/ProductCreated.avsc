@@ -4,6 +4,10 @@
     "namespace": "com.evolutionnext.products.events",
     "fields": [
         {
+            "name": "id",
+            "type": "string"
+        },
+        {
             "name": "name",
             "type": "string"
         },
