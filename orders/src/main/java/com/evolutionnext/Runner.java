@@ -3,11 +3,8 @@ package com.evolutionnext;
 import com.evolutionnext.orders.application.command.CreateOrder;
 import com.evolutionnext.orders.application.service.OrderApplicationService;
 import com.evolutionnext.orders.domain.aggregate.customer.CustomerId;
-import com.evolutionnext.orders.domain.aggregate.order.Order;
 import com.evolutionnext.orders.domain.aggregate.order.OrderId;
-import com.evolutionnext.orders.domain.aggregate.order.OrderItem;
-import com.evolutionnext.orders.domain.aggregate.product.ProductId;
-import com.evolutionnext.orders.infrastructure.out.OrderEventKafkaPublisher;
+import com.evolutionnext.orders.infrastructure.adapter.out.OrderEventKafkaPublisher;
 
 import java.util.Random;
 import java.util.UUID;
