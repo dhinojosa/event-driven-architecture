@@ -21,6 +21,7 @@
         <module>product-contracts</module>
         <module>orders-customer-consumer</module>
         <module>orders-product-consumer</module>
+        <module>web-util</module>
     </modules>
 
     <properties>
