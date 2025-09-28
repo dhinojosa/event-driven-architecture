@@ -1,8 +1,8 @@
 package com.evolutionnext.products.adapter.out;
 
 
-import com.evolutionnext.customers.domain.events.ProductEvent;
-import com.evolutionnext.customers.port.out.ProductPublisher;
+import com.evolutionnext.products.domain.events.ProductEvent;
+import com.evolutionnext.products.port.out.ProductPublisher;
 
 public class KafkaProductPublisher implements ProductPublisher {
 
