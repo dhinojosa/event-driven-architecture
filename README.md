@@ -24,3 +24,8 @@ GitHub Free users get **120 core-hours per month**, so you’re good **unless yo
 Visit [https://github.com/settings/billing](https://github.com/settings/billing) to confirm you have enough core-hours.
 
 If you run out midway, we’ll help you pair up or add you to a backup workspace or I can add you to my organization.
+
+
+## During Breaks
+
+It is is important that during breaks and lunch that you *Stop* your GitHub Workspace, so that you don't lose any core hours
