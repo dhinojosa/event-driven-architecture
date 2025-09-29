@@ -140,6 +140,7 @@
                                 <import>${project.basedir}/src/main/avro/Order.avsc</import>
                                 <import>${project.basedir}/src/main/avro/OrderPlaced.avsc</import>
                                 <import>${project.basedir}/src/main/avro/OrderCancelled.avsc</import>
+                                <import>${project.basedir}/src/main/avro/OrderCreated.avsc</import>
                             </imports>
                             <includes>
                                 <include>*.avsc</include>
