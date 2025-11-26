@@ -1,0 +1,8 @@
+{
+    "type": "record",
+    "name": "OrderCreatedMessage",
+    "namespace": "com.evolutionnext.order.events",
+    "fields": [
+        {"name": "orderId", "type": "string"}
+    ]
+}

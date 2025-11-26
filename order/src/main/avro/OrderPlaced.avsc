@@ -1,0 +1,8 @@
+{
+    "type": "record",
+    "name": "OrderPlacedMessage",
+    "namespace": "com.evolutionnext.order.events",
+    "fields": [
+        {"name": "order", "type": "com.evolutionnext.order.events.OrderMessage"}
+    ]
+}

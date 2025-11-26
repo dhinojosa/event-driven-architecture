@@ -1,7 +1,5 @@
 ---
-version: '2'
 services:
-
     broker:
         image: confluentinc/cp-kafka:7.6.1
         hostname: broker
@@ -173,31 +171,69 @@ services:
             - 8000:80
         volumes:
             - ./lab_book:/usr/share/nginx/html
-    postgres:
-        image: dhinojosa/postgresql-outbox
-        hostname: postgres
-        container_name: postgres
+
+    postgres-order:
+        image: postgres:latest
+        hostname: postgres-order
+        container_name: postgres-order
+        environment:
+            POSTGRES_DB: orderdb
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
         ports:
             - "5432:5432"
-    mongo:
-        image: mongo
-        restart: always
-        hostname: mongo
-        container_name: mongo
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+            - postgres-order-data:/var/lib/postgresql/data
 
-    mongo-express:
-        image: mongo-express
-        hostname: mongo-express
-        container_name: mongo-express
-        restart: always
+    postgres-inventory:
+        image: postgres:latest
+        hostname: postgres-inventory
+        container_name: postgres-inventory
+        environment:
+            POSTGRES_DB: inventorydb
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
         ports:
-            - 10002:8081
+            - "5433:5432"
+        volumes:
+            - postgres-inventory-data:/var/lib/postgresql/data
+
+    postgres-customer:
+        image: postgres:latest
+        hostname: postgres-customer
+        container_name: postgres-customer
         environment:
-            ME_CONFIG_MONGODB_ADMINUSERNAME: root
-            ME_CONFIG_MONGODB_ADMINPASSWORD: example
-            ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+            POSTGRES_DB: customerdb
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - "5434:5432"
+        volumes:
+            - postgres-customer-data:/var/lib/postgresql/data
+
+#    mongo:
+#        image: mongo
+#        restart: always
+#        hostname: mongo
+#        container_name: mongo
+#        environment:
+#            MONGO_INITDB_ROOT_USERNAME: root
+#            MONGO_INITDB_ROOT_PASSWORD: example
+#
+#    mongo-express:
+#        image: mongo-express
+#        hostname: mongo-express
+#        container_name: mongo-express
+#        restart: always
+#        ports:
+#            - 10002:8081
+#        environment:
+#            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#            ME_CONFIG_MONGODB_ADMINPASSWORD: example
+#            ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
 
+volumes:
+    postgres-order-data:
+    postgres-inventory-data:
+    postgres-customer-data:

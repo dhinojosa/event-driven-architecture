@@ -13,14 +13,13 @@
     <name>event-driven-architecture</name>
     <url>https://github.com/dhinojosa/event-driven-architecture</url>
     <modules>
-        <module>orders</module>
-        <module>customers</module>
-        <module>order-contracts</module>
-        <module>customer-contracts</module>
-        <module>products</module>
-        <module>product-contracts</module>
-        <module>orders-customer-consumer</module>
-        <module>orders-product-consumer</module>
+        <module>order</module>
+        <module>order-customer-consumer</module>
+        <module>order-product-consumer</module>
+        <module>customer</module>
+        <module>customer-order-consumer</module>
+        <module>inventory</module>
+        <module>inventory-order-consumer</module>
         <module>web-util</module>
     </modules>
 
@@ -89,15 +88,9 @@
                 <artifactId>kafka-streams</artifactId>
                 <version>${kafka.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
     <dependencies>
-
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -160,6 +153,18 @@
                     <groupId>org.apache.avro</groupId>
                     <artifactId>avro-maven-plugin</artifactId>
                     <version>1.11.3</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>schema</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                        <avroOutputDirectory>${project.build.directory}/generated-sources</avroOutputDirectory>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
