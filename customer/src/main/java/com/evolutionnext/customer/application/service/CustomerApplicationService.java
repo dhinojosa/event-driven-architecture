@@ -20,7 +20,7 @@ public class CustomerApplicationService implements PublicCustomerCommandPort {
             case CustomerCommand.Create(String firstName, String lastName, String email, String state) -> {
                 Customer customer = Customer.of(firstName, lastName, email, state);
                 System.out.printf("Created customer: %s with events: %s", customer, customer.events());
-                customer.events().stream().forEach(customerEvent -> {
+                customer.events().forEach(customerEvent -> {
                     System.out.printf("Publishing event: %s", customerEvent);
                     customerPublisher.publish(customerEvent);
                 });

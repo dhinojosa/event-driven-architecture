@@ -29,8 +29,15 @@
             <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <version>1.11.3</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                    <imports>
+                        <import>${project.basedir}/src/main/avro/OrderItemMessage.avsc</import>
+                        <import>${project.basedir}/src/main/avro/OrderMessage.avsc</import>
+                    </imports>
+                </configuration>
             </plugin>
+
         </plugins>
     </build>
 </project>
