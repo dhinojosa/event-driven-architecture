@@ -1,2 +1,6 @@
 .idea
 target/
+/order-customer-consumer/src/main/avro/
+/inventory-order-consumer/src/main/avro/
+/customer-order-consumer/src/main/avro/
+/order-product-consumer/src/main/avro/
