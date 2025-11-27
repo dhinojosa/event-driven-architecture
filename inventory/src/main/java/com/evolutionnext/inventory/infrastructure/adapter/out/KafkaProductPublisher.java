@@ -1,0 +1,58 @@
+package com.evolutionnext.inventory.infrastructure.adapter.out;
+
+import com.evolutionnext.inventory.domain.aggregate.Product;
+import com.evolutionnext.inventory.domain.events.ProductEvent;
+import com.evolutionnext.inventory.port.out.ProductPublisher;
+import com.evolutionnext.product.events.ProductCreatedMessage;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Properties;
+
+public class KafkaProductPublisher implements ProductPublisher {
+    private static final Logger logger = LoggerFactory.getLogger(KafkaProductPublisher.class);
+
+
+    private final KafkaProducer<String, ProductCreatedMessage> producer;
+    private static final String TOPIC = "products";
+
+    public KafkaProductPublisher(String bootstrapServers, String schemaRegistryUrl) {
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+        props.put("schema.registry.url", schemaRegistryUrl);
+        this.producer = new KafkaProducer<>(props);
+    }
+
+    @Override
+    public void publish(ProductEvent productEvent) {
+        ProducerRecord<String, ProductCreatedMessage> producerRecord =
+            switch (productEvent) {
+                case ProductEvent.ProductCreated(Product product) -> {
+                    logger.info("Publishing product created event: {}", product);
+                    ProductCreatedMessage message =
+                        new ProductCreatedMessage(
+                            product.productId().id().toString(),
+                            product.name(),
+                            product.description(),
+                            product.price().doubleValue());
+                    yield new ProducerRecord<>(TOPIC, message.getId().toString(), message);
+                }
+            };
+
+        try {
+            logger.info("Sending message: {}", producerRecord);
+            producer.send(producerRecord);
+            logger.info("Message sent successfully");
+        } catch (Exception e) {
+            logger.error("Error sending message", e);
+            throw new RuntimeException(e);
+        }
+    }
+}

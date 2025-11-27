@@ -1,6 +1,6 @@
 {
     "type": "record",
-    "name": "ProductCreated",
+    "name": "ProductCreatedMessage",
     "namespace": "com.evolutionnext.product.events",
     "fields": [
         {
@@ -9,6 +9,10 @@
         },
         {
             "name": "name",
+            "type": "string"
+        },
+        {
+            "name": "description",
             "type": "string"
         },
         {

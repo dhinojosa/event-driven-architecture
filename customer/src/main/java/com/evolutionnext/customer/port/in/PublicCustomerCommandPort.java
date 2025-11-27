@@ -5,5 +5,5 @@ import com.evolutionnext.customer.application.command.CustomerCommand;
 import com.evolutionnext.customer.application.result.CustomerResult;
 
 public interface PublicCustomerCommandPort {
-    public CustomerResult submit(CustomerCommand customerCommand);
+    CustomerResult submit(CustomerCommand customerCommand);
 }

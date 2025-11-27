@@ -12,7 +12,7 @@ public class Runner {
     public static void main(String[] args) throws IOException {
         CustomerPublisher customerPublisher = new KafkaCustomerPublisher("localhost:9092", "http://localhost:8081");
         SimpleWebServer simpleWebServer = new SimpleWebServer(new CustomerApplicationService(customerPublisher));
-        simpleWebServer.start();
-        System.out.println("Server started on port 8080");
+        simpleWebServer.start(9000);
+        System.out.println("Server started on port 9000");
     }
 }

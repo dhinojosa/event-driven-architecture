@@ -1,5 +1,7 @@
 package com.evolutionnext.inventory.domain.aggregate;
 
 
-public record Product(ProductId productId, String name, String description, int price) {
+import java.math.BigDecimal;
+
+public record Product(ProductId productId, String name, String description, BigDecimal price) {
 }

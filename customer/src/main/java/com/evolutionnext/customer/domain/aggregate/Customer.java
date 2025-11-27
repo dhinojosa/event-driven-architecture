@@ -17,7 +17,6 @@ public class Customer {
     private final String state;
     public final List<CustomerEvent> events;
 
-
     private Customer(CustomerId id, String firstName, String lastName, String email, String state, List<CustomerEvent> events) {
         this.id = id;
         this.firstName = firstName;

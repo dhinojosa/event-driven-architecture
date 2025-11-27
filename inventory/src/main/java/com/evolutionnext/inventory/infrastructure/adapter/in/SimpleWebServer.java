@@ -1,31 +1,32 @@
-package com.evolutionnext.customer.infrastructure.adapter.in;
+package com.evolutionnext.inventory.infrastructure.adapter.in;
 
-import com.evolutionnext.customer.application.command.CustomerCommand;
-import com.evolutionnext.customer.application.result.CustomerResult;
-import com.evolutionnext.customer.port.in.PublicCustomerCommandPort;
+import com.evolutionnext.inventory.application.command.ProductCommand;
+import com.evolutionnext.inventory.application.result.ProductResult;
+import com.evolutionnext.inventory.port.in.PublicProductCommandPort;
 import com.evolutionnext.orders.customer.web.FormParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
 import static com.evolutionnext.orders.customer.web.ResourceLoader.serveFromResources;
 
 public class SimpleWebServer {
-    private final PublicCustomerCommandPort publicCustomerCommandPort;
+    private final PublicProductCommandPort publicProductCommandPort;
     private HttpServer server;
 
     public SimpleWebServer(
-        PublicCustomerCommandPort publicCustomerCommandPort) {
-        this.publicCustomerCommandPort = publicCustomerCommandPort;
+        PublicProductCommandPort publicProductCommandPort) {
+        this.publicProductCommandPort = publicProductCommandPort;
     }
 
     public void start(int port) throws IOException {
         server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/", this::handleIndexRequest);
-        server.createContext("/customer", this::handleCustomerRequest);
+        server.createContext("/product", this::handleCustomerRequest);
         server.setExecutor(null);
         server.start();
     }
@@ -50,20 +51,19 @@ public class SimpleWebServer {
         if ("POST".equals(exchange.getRequestMethod())) {
             Map<String, String> params = FormParser.getFieldData(exchange);
             if (params == null) return;
-            String firstName = params.get("firstName");
-            String lastName = params.get("lastName");
-            String email = params.get("email");
-            String state = params.get("state");
+            String name = params.get("name");
+            String description = params.get("description");
+            String price = params.get("price");
 
-            if (firstName == null || lastName == null || email == null || state == null) {
+            if (name == null || description == null || price == null) {
                 exchange.sendResponseHeaders(400, 0);
                 exchange.close();
                 return;
             }
 
-            CustomerCommand customerCommand = new CustomerCommand.Create(firstName, lastName, email, state);
-            CustomerResult customerResult = publicCustomerCommandPort.submit(customerCommand);
-            System.out.println(customerResult);
+            ProductCommand productCommand = new ProductCommand.Create(name, description, new BigDecimal(price));
+            ProductResult productResult = publicProductCommandPort.submit(productCommand);
+            System.out.println(productResult);
         }
     }
 }
