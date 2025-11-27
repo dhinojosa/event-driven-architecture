@@ -18,6 +18,10 @@
         {
             "name": "price",
             "type": "double"
+        },
+        {
+            "name": "stock",
+            "type": "int"
         }
     ]
 }

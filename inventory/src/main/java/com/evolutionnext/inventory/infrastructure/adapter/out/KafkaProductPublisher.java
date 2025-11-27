@@ -41,7 +41,9 @@ public class KafkaProductPublisher implements ProductPublisher {
                             product.productId().id().toString(),
                             product.name(),
                             product.description(),
-                            product.price().doubleValue());
+                            product.price().doubleValue(),
+                            product.stock()
+                           );
                     yield new ProducerRecord<>(TOPIC, message.getId().toString(), message);
                 }
             };

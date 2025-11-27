@@ -2,6 +2,7 @@ package com.evolutionnext.inventory.infrastructure.adapter.in;
 
 import com.evolutionnext.inventory.application.command.ProductCommand;
 import com.evolutionnext.inventory.application.result.ProductResult;
+import com.evolutionnext.inventory.domain.aggregate.ProductId;
 import com.evolutionnext.inventory.port.in.PublicProductCommandPort;
 import com.evolutionnext.orders.customer.web.FormParser;
 import com.sun.net.httpserver.HttpExchange;
@@ -54,16 +55,24 @@ public class SimpleWebServer {
             String name = params.get("name");
             String description = params.get("description");
             String price = params.get("price");
+            String stock = params.get("stock");
 
-            if (name == null || description == null || price == null) {
+            if (name == null || description == null || price == null || stock == null) {
                 exchange.sendResponseHeaders(400, 0);
                 exchange.close();
                 return;
             }
 
-            ProductCommand productCommand = new ProductCommand.Create(name, description, new BigDecimal(price));
+            ProductCommand productCommand =
+                new ProductCommand.Create(name, description,
+                    new BigDecimal(price), Integer.parseInt(stock));
             ProductResult productResult = publicProductCommandPort.submit(productCommand);
             System.out.println(productResult);
+
+            String message = String.format("Product %s Successfully Created", name);
+            exchange.getResponseHeaders().set("Location", "/?message=" + message.replace(" ", "%20"));
+            exchange.sendResponseHeaders(303, -1);
+            exchange.close();
         }
     }
 }

@@ -11,6 +11,7 @@
 <body>
 <div class="container mt-5">
     <h2 class="mb-4">Product Registration</h2>
+    <div id="message-container"></div>
     <form action="/product" method="POST">
         <div class="mb-3">
             <label for="name" class="form-label">Product Name:</label>
@@ -24,12 +25,35 @@
             <label for="price" class="form-label">Price:</label>
             <input type="number" id="price" name="price" class="form-control" step="0.01" min="0" required>
         </div>
+        <div class="mb-3">
+            <label for="stock" class="form-label">Stock:</label>
+            <input type="number" id="stock" name="stock" class="form-control" step="1" min="0" value="0" required>
+        </div>
         <div>
             <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" id="autofill" class="btn btn-secondary ms-2">Autofill</button>
         </div>
     </form>
 </div>
+<script type="module">
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+
+    if (message) {
+        const messageContainer = document.getElementById('message-container');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        messageContainer.appendChild(alertDiv);
+
+        // Clean up the URL to remove the ?message parameter
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
 <script type="module">
     import {faker} from 'https://cdn.jsdelivr.net/npm/@faker-js/faker/+esm';
 
@@ -39,6 +63,7 @@
         document.getElementById('price').value = faker.commerce.price({min: 1, max: 1000, dec: 2});
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
 
