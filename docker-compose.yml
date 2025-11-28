@@ -184,6 +184,7 @@ services:
             - "5432:5432"
         volumes:
             - postgres-order-data:/var/lib/postgresql/data
+            - ./database-init/order:/docker-entrypoint-initdb.d
 
     postgres-inventory:
         image: postgres:latest
@@ -197,6 +198,7 @@ services:
             - "5433:5432"
         volumes:
             - postgres-inventory-data:/var/lib/postgresql/data
+            - ./database-init/inventory:/docker-entrypoint-initdb.d
 
     postgres-customer:
         image: postgres:latest
@@ -210,6 +212,7 @@ services:
             - "5434:5432"
         volumes:
             - postgres-customer-data:/var/lib/postgresql/data
+            - ./database-init/customer:/docker-entrypoint-initdb.d
 
 #    mongo:
 #        image: mongo
