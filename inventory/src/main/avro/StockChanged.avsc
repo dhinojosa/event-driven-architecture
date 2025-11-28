@@ -1,7 +1,7 @@
 {
     "type": "record",
-    "name": "ProductCreatedMessage",
-    "namespace": "com.evolutionnext.product.events",
+    "name": "StockChangedMessage",
+    "namespace": "com.evolutionnext.inventory.events",
     "fields": [
         {
             "name": "productId",
@@ -9,18 +9,6 @@
                 "type": "string",
                 "logicalType": "uuid"
             }
-        },
-        {
-            "name": "name",
-            "type": "string"
-        },
-        {
-            "name": "description",
-            "type": "string"
-        },
-        {
-            "name": "price",
-            "type": "double"
         },
         {
             "name": "stock",

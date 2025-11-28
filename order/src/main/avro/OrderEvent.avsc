@@ -20,7 +20,6 @@
                 "type": "enum",
                 "name": "EventType",
                 "symbols": [
-                    "ORDER_CREATED",
                     "ORDER_PLACED",
                     "ORDER_CANCELLED"
                 ]
@@ -30,8 +29,7 @@
             "name": "event",
             "type": [
                 "com.evolutionnext.order.events.OrderPlacedMessage",
-                "com.evolutionnext.order.events.OrderCancelledMessage",
-                "com.evolutionnext.order.events.OrderCreatedMessage"
+                "com.evolutionnext.order.events.OrderCancelledMessage"
             ]
         }
     ]
