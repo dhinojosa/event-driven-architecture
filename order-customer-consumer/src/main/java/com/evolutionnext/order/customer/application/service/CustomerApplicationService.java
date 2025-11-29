@@ -20,9 +20,13 @@ public class CustomerApplicationService implements MessagingCustomerCommandPort 
     public CustomerCommandResult submit(CustomerCommand customerCommand) {
         return switch(customerCommand) {
             case CustomerCommand.Create(CustomerId customerId, String fullName) -> {
-                Customer customer = new Customer(customerId, fullName);
-                customerRepository.save(customer);
-                yield new CustomerCommandResult.Created(customerId);
+                try {
+                    Customer customer = new Customer(customerId, fullName);
+                    customerRepository.save(customer);
+                    yield new CustomerCommandResult.Created(customerId);
+                } catch (Exception e) {
+                    yield new CustomerCommandResult.Error(e.getMessage());
+                }
             }
         };
     }
