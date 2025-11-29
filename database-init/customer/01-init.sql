@@ -4,8 +4,7 @@ CREATE TABLE customer
     firstName VARCHAR(50)  NOT NULL,
     lastName  VARCHAR(50)  NOT NULL,
     email     VARCHAR(100) NOT NULL UNIQUE,
-    state     CHAR(2),
-    numOrders INTEGER DEFAULT 0
+    state     CHAR(2)
 );
 
 -- Create an index on email for faster lookups
@@ -41,21 +40,3 @@ CREATE TABLE stateReport
 
 -- Create index on amount for aggregate queries
 CREATE INDEX idx_statereport_amount ON stateReport (amount);
-
-
--- Create customer creation outbox table for CDC
-CREATE TABLE customer_outbox
-(
-    id BIGSERIAL PRIMARY KEY,
-    aggregate_type VARCHAR(50) NOT NULL,
-    aggregate_id   UUID NOT NULL,
-    event_type     VARCHAR(50) NOT NULL,
-    payload        JSONB NOT NULL,
-    timestamp      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (aggregate_id)
-        REFERENCES customer (customerID)
-);
-
-CREATE INDEX idx_customer_outbox_ts ON customer_outbox (timestamp);
-CREATE INDEX idx_customer_outbox_aggregate_id ON customer_outbox (aggregate_id);
