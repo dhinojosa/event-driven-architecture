@@ -1,15 +1,8 @@
 {
     "type": "record",
     "name": "ProductCreatedMessage",
-    "namespace": "com.evolutionnext.product.events",
+    "namespace": "com.evolutionnext.inventory.events",
     "fields": [
-        {
-            "name": "productId",
-            "type": {
-                "type": "string",
-                "logicalType": "uuid"
-            }
-        },
         {
             "name": "name",
             "type": "string"
@@ -25,13 +18,6 @@
         {
             "name": "stock",
             "type": "int"
-        },
-        {
-            "name": "timestamp",
-            "type": {
-                "type": "long",
-                "logicalType": "timestamp-millis"
-            }
         }
     ]
 }

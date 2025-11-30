@@ -4,22 +4,8 @@
     "namespace": "com.evolutionnext.inventory.events",
     "fields": [
         {
-            "name": "productId",
-            "type": {
-                "type": "string",
-                "logicalType": "uuid"
-            }
-        },
-        {
             "name": "stock",
             "type": "int"
-        },
-        {
-            "name": "timestamp",
-            "type": {
-                "type": "long",
-                "logicalType": "timestamp-millis"
-            }
         }
     ]
 }

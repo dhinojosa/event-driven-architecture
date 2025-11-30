@@ -55,6 +55,14 @@
             <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
+                <configuration>
+                    <imports>
+                        <import>${project.basedir}/src/main/avro/ProductCreated.avsc</import>
+                        <import>${project.basedir}/src/main/avro/PriceChanged.avsc</import>
+                        <import>${project.basedir}/src/main/avro/StockChanged.avsc</import>
+                        <import>${project.basedir}/src/main/avro/InventoryEvent.avsc</import>
+                    </imports>
+                </configuration>
             </plugin>
         </plugins>
     </build>

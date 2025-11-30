@@ -1,0 +1,41 @@
+{
+    "type": "record",
+    "name": "InventoryEventMessage",
+    "namespace": "com.evolutionnext.inventory.events",
+    "fields": [
+        {
+            "name": "productId",
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
+        },
+        {
+            "name": "timestamp",
+            "type": {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+            }
+        },
+        {
+            "name": "eventType",
+            "type": {
+                "type": "enum",
+                "name": "EventType",
+                "symbols": [
+                    "PRODUCT_CREATED",
+                    "PRICE_CHANGED",
+                    "STOCK_CHANGED"
+                ]
+            }
+        },
+        {
+            "name": "event",
+            "type": [
+                "com.evolutionnext.inventory.events.ProductCreatedMessage",
+                "com.evolutionnext.inventory.events.PriceChangedMessage",
+                "com.evolutionnext.inventory.events.StockChangedMessage"
+            ]
+        }
+    ]
+}

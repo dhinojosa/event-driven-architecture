@@ -86,16 +86,12 @@ cat <<EOF > "$TMP_DIR/ref_order.json"
 EOF
 VERSION_ORDER=$(upload_schema "../avro/Order.avsc" "$NAMESPACE.OrderMessage" "$NAMESPACE.OrderMessage" "$TMP_DIR/ref_order.json")
 
-# 3. Upload OrderCreated (No dependencies)
-echo "3. Uploading OrderCreated..." >&2
-VERSION_CREATED=$(upload_schema "../avro/OrderCreated.avsc" "$NAMESPACE.OrderCreatedMessage" "$NAMESPACE.OrderCreatedMessage" "")
-
-# 4. Upload OrderCancelled (No dependencies)
-echo "4. Uploading OrderCancelled..." >&2
+# 3. Upload OrderCancelled (No dependencies)
+echo "3. Uploading OrderCancelled..." >&2
 VERSION_CANCELLED=$(upload_schema "../avro/OrderCancelled.avsc" "$NAMESPACE.OrderCancelledMessage" "$NAMESPACE.OrderCancelledMessage" "")
 
-# 5. Upload OrderPlaced (Depends on Order)
-echo "5. Uploading OrderPlaced..." >&2
+# 4. Upload OrderPlaced (Depends on Order)
+echo "4. Uploading OrderPlaced..." >&2
 cat <<EOF > "$TMP_DIR/ref_placed.json"
 [
   {"name": "$NAMESPACE.OrderMessage", "subject": "$NAMESPACE.OrderMessage", "version": $VERSION_ORDER}
@@ -103,13 +99,12 @@ cat <<EOF > "$TMP_DIR/ref_placed.json"
 EOF
 VERSION_PLACED=$(upload_schema "../avro/OrderPlaced.avsc" "$NAMESPACE.OrderPlacedMessage" "$NAMESPACE.OrderPlacedMessage" "$TMP_DIR/ref_placed.json")
 
-# 6. Upload ROOT: OrderEvent (Depends on Created, Cancelled, Placed)
-echo "6. Uploading ROOT: OrderEvent..." >&2
+# 5. Upload ROOT: OrderEvent (Depends on Created, Cancelled, Placed)
+echo "5. Uploading ROOT: OrderEvent..." >&2
 FINAL_SUBJECT="order-value"
 
 cat <<EOF > "$TMP_DIR/ref_event.json"
 [
-  {"name": "$NAMESPACE.OrderCreatedMessage", "subject": "$NAMESPACE.OrderCreatedMessage", "version": $VERSION_CREATED},
   {"name": "$NAMESPACE.OrderCancelledMessage", "subject": "$NAMESPACE.OrderCancelledMessage", "version": $VERSION_CANCELLED},
   {"name": "$NAMESPACE.OrderPlacedMessage", "subject": "$NAMESPACE.OrderPlacedMessage", "version": $VERSION_PLACED}
 ]

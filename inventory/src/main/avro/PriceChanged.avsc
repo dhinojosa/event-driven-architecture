@@ -1,37 +1,11 @@
 {
     "type": "record",
-    "name": "ProductCreatedMessage",
-    "namespace": "com.evolutionnext.product.events",
+    "name": "PriceChangedMessage",
+    "namespace": "com.evolutionnext.inventory.events",
     "fields": [
-        {
-            "name": "productId",
-            "type": {
-                "type": "string",
-                "logicalType": "uuid"
-            }
-        },
-        {
-            "name": "name",
-            "type": "string"
-        },
-        {
-            "name": "description",
-            "type": "string"
-        },
         {
             "name": "price",
             "type": "double"
-        },
-        {
-            "name": "stock",
-            "type": "int"
-        },
-        {
-            "name": "timestamp",
-            "type": {
-                "type": "long",
-                "logicalType": "timestamp-millis"
-            }
         }
     ]
 }
