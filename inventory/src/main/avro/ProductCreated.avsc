@@ -1,12 +1,8 @@
 {
     "type": "record",
     "name": "ProductCreatedMessage",
-    "namespace": "com.evolutionnext.product.events",
+    "namespace": "com.evolutionnext.inventory.events",
     "fields": [
-        {
-            "name": "id",
-            "type": "string"
-        },
         {
             "name": "name",
             "type": "string"

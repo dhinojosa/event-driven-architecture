@@ -3,7 +3,6 @@
     "name": "OrderCancelledMessage",
     "namespace": "com.evolutionnext.order.events",
     "fields": [
-        {"name": "orderId", "type": "string"},
         {"name": "reason", "type": "string"}
     ]
 }

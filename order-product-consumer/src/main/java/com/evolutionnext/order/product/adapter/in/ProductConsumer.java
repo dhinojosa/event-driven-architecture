@@ -1,20 +1,28 @@
 package com.evolutionnext.order.product.adapter.in;
 
+import com.evolutionnext.inventory.events.*;
+import com.evolutionnext.order.product.application.command.InventoryCommand;
+import com.evolutionnext.order.product.application.result.InventoryCommandResult;
+import com.evolutionnext.order.product.domain.aggregate.ProductId;
 import com.evolutionnext.order.product.port.in.InternalProductCommandPort;
-import com.evolutionnext.product.events.ProductCreated;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class ProductConsumer {
+public class ProductConsumer implements Runnable {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductConsumer.class);
     private final InternalProductCommandPort port;
+    private volatile boolean running = true;
 
     public ProductConsumer(InternalProductCommandPort port) {
         this.port = port;
@@ -23,14 +31,31 @@ public class ProductConsumer {
     public void run() {
         Properties props = getProperties();
 
-        try (KafkaConsumer<String, ProductCreated> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList("product_events"));
-            while (true) {
-                ConsumerRecords<String, ProductCreated> records = consumer.poll(Duration.ofMillis(100));
+        try (KafkaConsumer<String, InventoryEventMessage> consumer = new KafkaConsumer<>(props)) {
+            consumer.subscribe(Collections.singletonList("inventory"));
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Shutting down consumer...");
+                running = false;
+            }));
+
+            while (running) {
+                ConsumerRecords<String, InventoryEventMessage> records = consumer.poll(Duration.ofMillis(100));
                 records.forEach(record -> {
-                    System.out.printf("Received message: key=%s, value=%s%n",
-                        record.key(), record.value());
-                    port.storeProduct(record.value().getId().toString(), record.value().getName().toString());
+                    logger.info("Received message: key={}, value={}", record.key(), record.value());
+                    InventoryEventMessage inventoryEventMessage = record.value();
+                    Object event = inventoryEventMessage.getEvent();
+                    InventoryCommand inventoryCommand = switch(event) {
+                        case ProductCreatedMessage m -> new InventoryCommand.CreateProduct(
+                            new ProductId(inventoryEventMessage.getProductId()), m.getName().toString(), m.getDescription().toString(), m.getStock(), BigDecimal.valueOf(m.getPrice()));
+                        case PriceChangedMessage m -> new InventoryCommand.UpdatePrice(new ProductId(inventoryEventMessage.getProductId()),
+                            BigDecimal.valueOf(m.getPrice()));
+                        case StockChangedMessage m -> new InventoryCommand.UpdateStock(new ProductId(inventoryEventMessage.getProductId()),
+                            m.getStock());
+                        default -> throw new IllegalStateException("Unexpected value: " + event);
+                    };
+                    InventoryCommandResult result = port.submit(inventoryCommand);
+                    logger.info("Inventory Command Result: {}", result);
                 });
             }
         }
@@ -44,6 +69,7 @@ public class ProductConsumer {
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class.getName());
         props.put("schema.registry.url", "http://localhost:8081");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put("specific.avro.reader", true);
         return props;
     }
 }

@@ -43,7 +43,7 @@ public class SimpleWebServer {
 
     private void handleCustomerRequest(HttpExchange exchange) throws IOException {
         if ("GET".equals(exchange.getRequestMethod())) {
-            serveFromResources(exchange, "create.html");
+            serveFromResources(exchange, "index.html");
             return;
         }
 
@@ -62,8 +62,11 @@ public class SimpleWebServer {
             }
 
             CustomerCommand customerCommand = new CustomerCommand.Create(firstName, lastName, email, state);
-            CustomerResult customerResult = publicCustomerCommandPort.submit(customerCommand);
-            System.out.println(customerResult);
+            publicCustomerCommandPort.submit(customerCommand);
+            String message = String.format("Customer %s %s Successfully Created", firstName, lastName);
+            exchange.getResponseHeaders().set("Location", "/?message=" + message.replace(" ", "%20"));
+            exchange.sendResponseHeaders(303, -1);
+            exchange.close();
         }
     }
 }

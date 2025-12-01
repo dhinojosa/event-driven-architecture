@@ -1,4 +1,3 @@
----
 services:
     broker:
         image: confluentinc/cp-kafka:7.6.1
@@ -183,7 +182,8 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - postgres-order-data:/var/lib/postgresql/data
+            - postgres-order-data:/var/lib/postgresql
+            - ./database-init/order:/docker-entrypoint-initdb.d
 
     postgres-inventory:
         image: postgres:latest
@@ -196,7 +196,8 @@ services:
         ports:
             - "5433:5432"
         volumes:
-            - postgres-inventory-data:/var/lib/postgresql/data
+            - postgres-inventory-data:/var/lib/postgresql
+            - ./database-init/inventory:/docker-entrypoint-initdb.d
 
     postgres-customer:
         image: postgres:latest
@@ -209,7 +210,8 @@ services:
         ports:
             - "5434:5432"
         volumes:
-            - postgres-customer-data:/var/lib/postgresql/data
+            - postgres-customer-data:/var/lib/postgresql
+            - ./database-init/customer:/docker-entrypoint-initdb.d
 
 #    mongo:
 #        image: mongo

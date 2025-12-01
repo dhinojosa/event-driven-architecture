@@ -1,0 +1,11 @@
+{
+    "type": "record",
+    "name": "PriceChangedMessage",
+    "namespace": "com.evolutionnext.inventory.events",
+    "fields": [
+        {
+            "name": "price",
+            "type": "double"
+        }
+    ]
+}
