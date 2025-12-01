@@ -2,8 +2,10 @@ package com.evolutionnext.inventory.infrastructure.adapter.out;
 
 import com.evolutionnext.inventory.domain.aggregate.Product;
 import com.evolutionnext.inventory.domain.events.ProductEvent;
+import com.evolutionnext.inventory.events.EventType;
+import com.evolutionnext.inventory.events.InventoryEventMessage;
+import com.evolutionnext.inventory.events.ProductCreatedMessage;
 import com.evolutionnext.inventory.port.out.ProductPublisher;
-import com.evolutionnext.product.events.ProductCreatedMessage;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -12,11 +14,11 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.Properties;
 
 public class KafkaProductPublisher implements ProductPublisher {
     private static final Logger logger = LoggerFactory.getLogger(KafkaProductPublisher.class);
-
 
     private final KafkaProducer<String, ProductCreatedMessage> producer;
     private static final String TOPIC = "products";
@@ -38,13 +40,16 @@ public class KafkaProductPublisher implements ProductPublisher {
                     logger.info("Publishing product created event: {}", product);
                     ProductCreatedMessage message =
                         new ProductCreatedMessage(
-                            product.productId().id().toString(),
                             product.name(),
                             product.description(),
                             product.price().doubleValue(),
                             product.stock()
-                           );
-                    yield new ProducerRecord<>(TOPIC, message.getId().toString(), message);
+                        );
+                    InventoryEventMessage inventoryEventMessage =
+                        new InventoryEventMessage(product.productId().id(),
+                            Instant.now(), EventType.PRODUCT_CREATED, message);
+                    yield new ProducerRecord<>
+                        (TOPIC, product.productId().id().toString(), message);
                 }
             };
 
