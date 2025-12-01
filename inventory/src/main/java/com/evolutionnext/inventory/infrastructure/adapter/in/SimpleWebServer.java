@@ -2,11 +2,12 @@ package com.evolutionnext.inventory.infrastructure.adapter.in;
 
 import com.evolutionnext.inventory.application.command.ProductCommand;
 import com.evolutionnext.inventory.application.result.ProductResult;
-import com.evolutionnext.inventory.domain.aggregate.ProductId;
 import com.evolutionnext.inventory.port.in.PublicProductCommandPort;
 import com.evolutionnext.orders.customer.web.FormParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static com.evolutionnext.orders.customer.web.ResourceLoader.serveFromResources;
 
 public class SimpleWebServer {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleWebServer.class);
     private final PublicProductCommandPort publicProductCommandPort;
     private HttpServer server;
 
@@ -67,8 +69,7 @@ public class SimpleWebServer {
                 new ProductCommand.Create(name, description,
                     new BigDecimal(price), Integer.parseInt(stock));
             ProductResult productResult = publicProductCommandPort.submit(productCommand);
-            System.out.println(productResult);
-
+            logger.info("Product Result: {}", productResult);
             String message = String.format("Product %s Successfully Created", name);
             exchange.getResponseHeaders().set("Location", "/?message=" + message.replace(" ", "%20"));
             exchange.sendResponseHeaders(303, -1);
