@@ -40,7 +40,7 @@ services:
             SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
 
     connect:
-        image: cnfldemos/cp-server-connect-datagen:0.6.4-7.6.0
+        image: confluentinc/cp-kafka-connect:7.6.1
         hostname: connect
         container_name: connect
         depends_on:
@@ -195,6 +195,14 @@ services:
             POSTGRES_PASSWORD: postgres
         ports:
             - "5433:5432"
+        command:
+            - "postgres"
+            - "-c"
+            - "wal_level=logical"
+            - "-c"
+            - "max_wal_senders=10"
+            - "-c"
+            - "max_replication_slots=10"
         volumes:
             - postgres-inventory-data:/var/lib/postgresql
             - ./database-init/inventory:/docker-entrypoint-initdb.d

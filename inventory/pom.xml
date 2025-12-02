@@ -16,7 +16,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <build>
         <plugins>
             <plugin>
@@ -35,6 +46,47 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>8.1.0</version>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>http://127.0.0.1:8081</param>
+                    </schemaRegistryUrls>
+                    <subjects>
+                        <inventory-value>src/main/avro/InventoryEvent.avsc</inventory-value>
+                        <priceChanged>src/main/avro/PriceChanged.avsc</priceChanged>
+                        <productCreated>src/main/avro/ProductCreated.avsc</productCreated>
+                        <stockChanged>src/main/avro/StockChanged.avsc</stockChanged>
+                    </subjects>
+                    <schemaTypes>
+                        <inventory-value>AVRO</inventory-value>
+                        <priceChanged>AVRO</priceChanged>
+                        <productCreated>AVRO</productCreated>
+                        <stockChanged>AVRO</stockChanged>
+                    </schemaTypes>
+                    <references>
+                        <inventory-value>
+                            <reference>
+                                <name>com.evolutionnext.inventory.events.ProductCreatedMessage</name>
+                                <subject>productCreated</subject>
+                            </reference>
+                            <reference>
+                                <name>com.evolutionnext.inventory.events.PriceChangedMessage</name>
+                                <subject>priceChanged</subject>
+                            </reference>
+                            <reference>
+                                <name>com.evolutionnext.inventory.events.StockChangedMessage</name>
+                                <subject>stockChanged</subject>
+                            </reference>
+                        </inventory-value>
+                    </references>
+                </configuration>
+                <goals>
+                    <goal>register</goal>
+                </goals>
             </plugin>
         </plugins>
     </build>
