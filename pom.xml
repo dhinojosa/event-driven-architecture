@@ -31,14 +31,19 @@
         <confluent.version>7.9.2</confluent.version>
     </properties>
 
-    <!--necessary
-    to resolve confluent dependencies-->
     <repositories>
         <repository>
             <id>confluent</id>
             <url>https://packages.confluent.io/maven/</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 
     <dependencyManagement>

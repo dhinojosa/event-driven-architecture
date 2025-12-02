@@ -17,7 +17,7 @@ public class Customer {
     private final String state;
     public final List<CustomerEvent> events;
 
-    private Customer(CustomerId id, String firstName, String lastName, String email, String state, List<CustomerEvent> events) {
+    public Customer(CustomerId id, String firstName, String lastName, String email, String state, List<CustomerEvent> events) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,10 +26,9 @@ public class Customer {
         this.events = events;
     }
 
-    public static Customer of(String firstName, String lastName, String email, String state) {
-        CustomerId id = new CustomerId(UUID.randomUUID());
+    public static Customer of(CustomerId customerid, String firstName, String lastName, String email, String state) {
         ArrayList<CustomerEvent> events = new ArrayList<>();
-        Customer customer = new Customer(id, firstName, lastName, email, state, events);
+        Customer customer = new Customer(customerid, firstName, lastName, email, state, events);
         customer.events.add(new CustomerEvent.Created(customer));
         return customer;
     }

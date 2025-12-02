@@ -19,8 +19,8 @@ CREATE TABLE orderHistory
 (
     orderID UUID PRIMARY KEY,
     customerID UUID NOT NULL,
-    total NUMERIC(19, 4) NOT NULL,
-    timestamp TIMESTAMP NOT NULL,
+    total     NUMERIC(19, 4) NOT NULL,
+    timestamp TIMESTAMP      NOT NULL,
     FOREIGN KEY (customerID) REFERENCES customer (customerID)
 );
 
@@ -33,10 +33,19 @@ CREATE INDEX idx_orderhistory_timestamp ON orderHistory (timestamp);
 -- Create the stateReport table
 CREATE TABLE stateReport
 (
-    state CHAR(2) PRIMARY KEY,
+    state  CHAR(2) PRIMARY KEY,
     amount NUMERIC(19, 4) NOT NULL DEFAULT 0,
-    count INTEGER NOT NULL DEFAULT 0
+    count  INTEGER        NOT NULL DEFAULT 0
 );
 
 -- Create index on amount for aggregate queries
 CREATE INDEX idx_statereport_amount ON stateReport (amount);
+
+CREATE TABLE customer_outbox
+(
+    id UUID PRIMARY KEY,
+    aggregatetype VARCHAR(255) NOT NULL,
+    aggregateid   VARCHAR(255) NOT NULL,
+    type          VARCHAR(255) NOT NULL,
+    payload BYTEA
+);

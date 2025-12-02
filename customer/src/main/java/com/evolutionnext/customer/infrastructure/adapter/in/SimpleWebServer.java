@@ -1,7 +1,6 @@
 package com.evolutionnext.customer.infrastructure.adapter.in;
 
 import com.evolutionnext.customer.application.command.CustomerCommand;
-import com.evolutionnext.customer.application.result.CustomerResult;
 import com.evolutionnext.customer.port.in.PublicCustomerCommandPort;
 import com.evolutionnext.orders.customer.web.FormParser;
 import com.sun.net.httpserver.HttpExchange;
