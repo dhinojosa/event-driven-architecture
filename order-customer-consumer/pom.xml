@@ -93,6 +93,13 @@
                             <goal>schema</goal>
                         </goals>
                         <configuration>
+                            <imports>
+                                <import>${project.basedir}/src/main/avro/orderItem.avsc</import>
+                                <import>${project.basedir}/src/main/avro/order.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orderCancelled.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orderPlaced.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orders-value.avsc</import>
+                            </imports>
                             <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
                         </configuration>

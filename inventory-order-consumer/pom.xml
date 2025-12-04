@@ -58,15 +58,61 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>8.1.0</version>
+                <executions>
+                    <execution>
+                        <id>download-schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>download</goal>
+                        </goals>
+                        <configuration>
+                            <schemaRegistryUrls>
+                                <param>http://127.0.0.1:8081</param>
+                            </schemaRegistryUrls>
+                            <subjectPatterns>
+                                <param>^orders-(key|value)$</param>
+                                <param>order</param>
+                                <param>orderCancelled</param>
+                                <param>orderItem</param>
+                                <param>orderPlaced</param>
+                            </subjectPatterns>
+                            <versions>
+                                <param>latest</param>
+                                <param>latest</param>
+                                <param>latest</param>
+                                <param>latest</param>
+                                <param>latest</param>
+                            </versions>
+                            <outputDirectory>${project.basedir}/src/main/avro</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
-                    <imports>
-                        <import>${project.basedir}/src/main/avro/OrderItemMessage.avsc</import>
-                        <import>${project.basedir}/src/main/avro/OrderMessage.avsc</import>
-                    </imports>
-                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
+                            <imports>
+                                <import>${project.basedir}/src/main/avro/orderItem.avsc</import>
+                                <import>${project.basedir}/src/main/avro/order.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orderCancelled.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orderPlaced.avsc</import>
+                                <import>${project.basedir}/src/main/avro/orders-value.avsc</import>
+                            </imports>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
