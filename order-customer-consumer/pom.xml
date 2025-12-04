@@ -58,8 +58,46 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>8.1.0</version>
+                <executions>
+                    <execution>
+                        <id>download-schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>download</goal>
+                        </goals>
+                        <configuration>
+                            <schemaRegistryUrls>
+                                <param>http://127.0.0.1:8081</param>
+                            </schemaRegistryUrls>
+                            <subjectPatterns>
+                                <param>^customers-(key|value)$</param>
+                            </subjectPatterns>
+                            <versions>
+                                <param>latest</param>
+                            </versions>
+                            <outputDirectory>${project.basedir}/src/main/avro</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -42,6 +42,7 @@ public class KafkaCustomerPublisher implements CustomerPublisher {
         try {
             producer.send(producerRecord);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

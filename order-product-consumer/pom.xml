@@ -53,16 +53,58 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>8.1.0</version>
+                <executions>
+                    <execution>
+                        <id>download-schemas</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>download</goal>
+                        </goals>
+                        <configuration>
+                            <schemaRegistryUrls>
+                                <param>http://127.0.0.1:8081</param>
+                            </schemaRegistryUrls>
+                            <subjectPatterns>
+                                <param>^inventory-(key|value)$</param>
+                                <param>productCreatedMessage</param>
+                                <param>stockChanged</param>
+                                <param>priceChanged</param>
+                            </subjectPatterns>
+                            <versions>
+                                <param>latest</param>
+                                <param>latest</param>
+                                <param>latest</param>
+                                <param>latest</param>
+                            </versions>
+                            <outputDirectory>${project.basedir}/src/main/avro</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <configuration>
-                    <imports>
-                        <import>${project.basedir}/src/main/avro/ProductCreated.avsc</import>
-                        <import>${project.basedir}/src/main/avro/PriceChanged.avsc</import>
-                        <import>${project.basedir}/src/main/avro/StockChanged.avsc</import>
-                        <import>${project.basedir}/src/main/avro/InventoryEvent.avsc</import>
-                    </imports>
-                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/avro</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/avro</outputDirectory>
+                            <imports>
+                                <import>${project.basedir}/src/main/avro/productCreated.avsc</import>
+                                <import>${project.basedir}/src/main/avro/priceChanged.avsc</import>
+                                <import>${project.basedir}/src/main/avro/stockChanged.avsc</import>
+                                <import>${project.basedir}/src/main/avro/inventory-value.avsc</import>
+                            </imports>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

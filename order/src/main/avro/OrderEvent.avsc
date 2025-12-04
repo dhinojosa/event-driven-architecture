@@ -5,7 +5,10 @@
     "fields": [
         {
             "name": "orderId",
-            "type": "string"
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
         },
         {
             "name": "timestamp",

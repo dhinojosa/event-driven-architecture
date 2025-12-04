@@ -2,38 +2,47 @@ package com.evolutionnext.orders.customer.web;
 
 
 import com.sun.net.httpserver.HttpExchange;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FormParser {
-    public static Map<String, String> getFieldData(HttpExchange exchange) throws IOException {
+    private static final Logger logger = LoggerFactory.getLogger(FormParser.class);
+
+    public static Map<String, List<String>> getFieldData(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         String method = exchange.getRequestMethod();
         String contentType = exchange.getRequestHeaders().getFirst("Content-Type");
-        Map<String, String> params = new HashMap<>();
 
-        // Parse query string if present
+
+        logger.info("Received {} request for {} with query {}", method, exchange.getRequestURI(), query);
+        Map<String, List<String>> params = new HashMap<>();
+
         if (query != null && !query.isEmpty()) {
             parseParamsIntoMap(query, params);
         }
 
-        // Parse body for POST/PUT when form-encoded
         if (("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method))
                 && contentType != null
                 && contentType.toLowerCase().contains("application/x-www-form-urlencoded")) {
             String body = readRequestBody(exchange, resolveCharset(contentType));
-            if (body != null && !body.isEmpty()) {
+            logger.info("Request body: {}", body);
+            if (!body.isEmpty()) {
                 parseParamsIntoMap(body, params);
             }
         }
 
         if (params.isEmpty()) {
+            logger.warn("No parameters found in the request");
             exchange.sendResponseHeaders(400, 0);
             exchange.close();
             return null;
@@ -42,15 +51,17 @@ public class FormParser {
         return params;
     }
 
-    private static void parseParamsIntoMap(String paramString, Map<String, String> out) throws IOException {
+    private static void parseParamsIntoMap(String paramString, Map<String, List<String>> out) throws IOException {
         String[] pairs = paramString.split("&");
         for (String pair : pairs) {
             if (pair.isEmpty()) continue;
             String[] kv = pair.split("=", 2);
             String key = urlDecode(kv[0]);
             String value = kv.length > 1 ? urlDecode(kv[1]) : "";
+
             if (key != null && !key.isEmpty()) {
-                out.put(key, value);
+                // CHANGED: Use computeIfAbsent to handle the list creation
+                out.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
             }
         }
     }
@@ -80,7 +91,9 @@ public class FormParser {
                     return Charset.forName(cs);
                 }
             }
-        } catch (Exception ignored) { }
+        } catch (Exception e) {
+            logger.warn("Failed to resolve charset from content type: {}", contentType, e);
+        }
         return StandardCharsets.UTF_8;
     }
 }

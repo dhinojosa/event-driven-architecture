@@ -50,25 +50,8 @@ public class PostgresOutboxRepository implements ProductRepository {
             );
             return serializer.serialize("inventory", record);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Failed to convert Avro to bytes", e);
-        }
-    }
-
-    public static String toJson(SpecificRecordBase record) {
-        try {
-
-            Schema schema = record.getSchema();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-            Encoder jsonEncoder = EncoderFactory.get().jsonEncoder(schema, out);
-            DatumWriter<SpecificRecordBase> writer = new SpecificDatumWriter<>(schema);
-
-            writer.write(record, jsonEncoder);
-            jsonEncoder.flush();
-
-            return out.toString(StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to convert Avro to JSON", e);
         }
     }
 
@@ -76,10 +59,10 @@ public class PostgresOutboxRepository implements ProductRepository {
     public void persist(Product product) {
         InventoryEventMessage inventoryEventMessage = new InventoryEventMessage(
             product.productId().id(), Instant.now(), PRODUCT_CREATED,
-            new ProductCreatedMessage(product.name(), product.description(), product.price().doubleValue(), product.stock())
+            new ProductCreatedMessage(product.name(), product.description(),
+                product.price().doubleValue(), product.stock())
         );
 
-        logger.info("Persisting avro: {}", toJson(inventoryEventMessage));
 
         try (var connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);

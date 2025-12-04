@@ -4,12 +4,11 @@
     "namespace": "com.evolutionnext.order.events",
     "fields": [
         {
-            "name": "orderId",
-            "type": "string"
-        },
-        {
             "name": "customerId",
-            "type": "string"
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
         },
         {
             "name": "orderItems",

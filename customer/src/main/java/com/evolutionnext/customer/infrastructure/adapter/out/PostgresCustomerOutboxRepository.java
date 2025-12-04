@@ -38,7 +38,7 @@ public class PostgresCustomerOutboxRepository implements CustomerRepository {
                 Map.of("schema.registry.url", "http://schema-registry:8081"),
                 false
             );
-            return serializer.serialize("inventory", record);
+            return serializer.serialize("customer", record);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to convert Avro to bytes", e);
@@ -82,6 +82,7 @@ public class PostgresCustomerOutboxRepository implements CustomerRepository {
                 }
                 connection.commit();
             } catch (Exception e) {
+                e.printStackTrace();
                 connection.rollback();
                 throw new RuntimeException(e);
             }

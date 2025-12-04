@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Order</h2>
+    <div id="message-container"></div>
+    <form action="/order" method="POST">
+        <div class="mb-3">
+            <label for="customer" class="form-label">Customer:</label>
+            <select id="customer" name="customerId" class="form-select" required>
+                <option value="">Select a customer</option>
+            </select>
+        </div>
+        <div id="orderItems" class="mb-3">
+            <!-- Order items will be added here dynamically -->
+        </div>
+        <div class="mb-3">
+            <button type="button" class="btn btn-secondary" id="addItem">Add Item</button>
+        </div>
+        <div class="mb-3">
+            <h4>Total: $<span id="orderTotal">0.00</span></h4>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </div>
+    </form>
+</div>
+<script type="module">
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+
+    if (message) {
+        const messageContainer = document.getElementById('message-container');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        messageContainer.appendChild(alertDiv);
+
+        // Clean up the URL to remove the ?message parameter
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
+<script type="module">
+    // Load customers and products
+    async function loadCustomers() {
+        const response = await fetch('/api/customers');
+        const customers = await response.json();
+        const select = document.getElementById('customer');
+        customers.forEach(customer => {
+            const option = new Option(
+                customer.fullName,
+                customer.id.uuid
+            );
+            select.add(option);
+        });
+    }
+
+
+    async function loadProducts() {
+        const response = await fetch('/api/products');
+        return await response.json();
+    }
+
+    let products = [];
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadCustomers();
+        products = await loadProducts();
+    });
+
+
+    // Handle adding new items
+    document.getElementById('addItem').addEventListener('click', () => {
+        const orderItems = document.getElementById('orderItems');
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'row mb-2';
+        itemDiv.innerHTML = `
+                <div class="col-5">
+                    <!-- ADDED name="productId" -->
+                    <select name="productId" class="form-select product-select" required>
+                        <option value="">Select a product</option>
+                        ${products.map(p => `<option value="${p.productId.id}" data-price="${p.price}">${p.name} - $${p.price}</option>`).join('')}
+                    </select>
+                </div>
+                <div class="col-3">
+                    <!-- ADDED name="quantity" -->
+                    <input type="number" name="quantity" class="form-control quantity-input" value="1" min="1" required>
+                </div>
+                <div class="col-3">
+                    <span class="line-total">$0.00</span>
+                    <!-- ADDED hidden input for name="price" -->
+                    <input type="hidden" name="price" class="price-input" value="0">
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
+                </div>
+            `;
+
+        itemDiv.querySelector('.remove-item').addEventListener('click', () => {
+            itemDiv.remove();
+            calculateTotal();
+        });
+
+        const updateLineTotal = () => {
+            const select = itemDiv.querySelector('.product-select');
+            const quantity = parseInt(itemDiv.querySelector('.quantity-input').value);
+            const price = select.selectedOptions[0]?.dataset?.price || 0;
+            const total = quantity * price;
+
+            itemDiv.querySelector('.line-total').textContent = `$${total.toFixed(2)}`;
+
+            // UPDATE hidden price input so Java backend gets the correct integer price
+            // Note: Your Java code expects an integer price.
+            // Ideally, pass the integer cents, but if your data-price is float (812.79),
+            // verify your Java parsing logic handles floats or if you need to convert here.
+            // Assuming Java expects just the price per unit:
+            itemDiv.querySelector('.price-input').value = Math.round(price); // Or however you want to handle cents
+
+            calculateTotal();
+        };
+
+        itemDiv.querySelector('.product-select').addEventListener('change', updateLineTotal);
+        itemDiv.querySelector('.quantity-input').addEventListener('input', updateLineTotal);
+
+        orderItems.appendChild(itemDiv);
+    });
+
+    function calculateTotal() {
+        const total = Array.from(document.querySelectorAll('.line-total'))
+            .reduce((sum, el) => sum + parseFloat(el.textContent.replace('$', '') || 0), 0);
+        document.getElementById('orderTotal').textContent = total.toFixed(2);
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

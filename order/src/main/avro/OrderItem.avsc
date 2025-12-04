@@ -5,7 +5,10 @@
     "fields": [
         {
             "name": "productId",
-            "type": "long"
+            "type": {
+                "type": "string",
+                "logicalType": "uuid"
+            }
         },
         {
             "name": "quantity",
@@ -13,7 +16,7 @@
         },
         {
             "name": "price",
-            "type": "int"
+            "type": "double"
         }
     ]
 }

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 
 import static com.evolutionnext.orders.customer.web.ResourceLoader.serveFromResources;
@@ -52,12 +53,12 @@ public class SimpleWebServer {
         }
 
         if ("POST".equals(exchange.getRequestMethod())) {
-            Map<String, String> params = FormParser.getFieldData(exchange);
+            Map<String, List<String>> params = FormParser.getFieldData(exchange);
             if (params == null) return;
-            String name = params.get("name");
-            String description = params.get("description");
-            String price = params.get("price");
-            String stock = params.get("stock");
+            String name = params.get("name").getFirst();
+            String description = params.get("description").getFirst();
+            String price = params.get("price").getFirst();
+            String stock = params.get("stock").getFirst();
 
             if (name == null || description == null || price == null || stock == null) {
                 exchange.sendResponseHeaders(400, 0);

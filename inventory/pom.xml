@@ -84,9 +84,6 @@
                         </inventory-value>
                     </references>
                 </configuration>
-                <goals>
-                    <goal>register</goal>
-                </goals>
             </plugin>
         </plugins>
     </build>

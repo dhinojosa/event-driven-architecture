@@ -1,14 +1,16 @@
 package com.evolutionnext.order.domain.aggregate.order;
 
 import com.evolutionnext.order.domain.aggregate.customer.CustomerId;
-import com.evolutionnext.order.domain.events.OrderCancelled;
-import com.evolutionnext.order.domain.events.OrderCreated;
 import com.evolutionnext.order.domain.events.OrderEvent;
-import com.evolutionnext.order.domain.events.OrderPlaced;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Order {
+    private static final Logger logger = LoggerFactory.getLogger(Order.class);
+
     private final OrderId orderId;
     private final CustomerId customerId;
     private OrderStatus status;
@@ -20,7 +22,6 @@ public class Order {
         this.customerId = customerId;
         this.status = OrderStatus.CREATED;
         this.items = new ArrayList<>();
-        this.events.add(new OrderCreated(this));
     }
 
     public void placeOrder() {
@@ -28,25 +29,27 @@ public class Order {
             throw new IllegalStateException("Order cannot be placed in its current state");
         }
         this.status = OrderStatus.PLACED;
-        this.events.add(new OrderPlaced(this));
+        this.events.add(new OrderEvent.OrderPlaced(this));
     }
 
     public void addOrderItem(OrderItem orderItem) {
+        logger.info("Received order item: {}", orderItem);
+
         if (this.status != OrderStatus.CREATED) {
             throw new IllegalStateException("Cannot add items to an order that is not in the NEW state");
         }
         this.items.add(orderItem);
+        this.events.add(new OrderEvent.OrderItemAdded(orderItem));
     }
 
     public void cancelOrder() {
         this.status = OrderStatus.CANCELLED;
-        this.events.add(new OrderCancelled(this, "Order cancelled by customer"));
+        this.events.add(new OrderEvent.OrderCancelled(orderId, "Order cancelled by customer"));
     }
 
-    public static Order create(OrderId orderId, CustomerId customerId, String state){
+    public static Order create(OrderId orderId, CustomerId customerId, String state) {
         return new Order(orderId, customerId);
     }
-
 
     public OrderId getOrderId() {
         return orderId;
@@ -56,8 +59,8 @@ public class Order {
         return customerId;
     }
 
-    public int getTotal() {
-        return items.stream().mapToInt(OrderItem::price).sum();
+    public BigDecimal getTotal() {
+        return items.stream().map(OrderItem::price).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

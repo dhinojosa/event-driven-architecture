@@ -8,7 +8,7 @@ import com.evolutionnext.order.product.port.in.InternalProductCommandPort;
 import com.evolutionnext.order.product.port.out.ProductRepository;
 import org.postgresql.ds.PGSimpleDataSource;
 
-public class Runner {
+public class OrderProductConsumerRunner {
     private static PGSimpleDataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[]{"localhost"});

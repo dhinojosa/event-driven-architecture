@@ -5,15 +5,21 @@ import com.evolutionnext.customer.port.in.PublicCustomerCommandPort;
 import com.evolutionnext.orders.customer.web.FormParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 
 import static com.evolutionnext.orders.customer.web.ResourceLoader.serveFromResources;
 
 public class SimpleWebServer {
+    private static final Logger logger = LoggerFactory.getLogger(SimpleWebServer.class);
+
     private final PublicCustomerCommandPort publicCustomerCommandPort;
+
     private HttpServer server;
 
     public SimpleWebServer(
@@ -41,20 +47,24 @@ public class SimpleWebServer {
     }
 
     private void handleCustomerRequest(HttpExchange exchange) throws IOException {
+        logger.info("Received {} request for {}", exchange.getRequestMethod(), exchange.getRequestURI());
+
         if ("GET".equals(exchange.getRequestMethod())) {
             serveFromResources(exchange, "index.html");
             return;
         }
 
         if ("POST".equals(exchange.getRequestMethod())) {
-            Map<String, String> params = FormParser.getFieldData(exchange);
+            Map<String, List<String>> params = FormParser.getFieldData(exchange);
             if (params == null) return;
-            String firstName = params.get("firstName");
-            String lastName = params.get("lastName");
-            String email = params.get("email");
-            String state = params.get("state");
+            String firstName = params.get("firstName").getFirst();
+            String lastName = params.get("lastName").getFirst();
+            String email = params.get("email").getFirst();
+            String state = params.get("state").getFirst();
 
             if (firstName == null || lastName == null || email == null || state == null) {
+                logger.error("Invalid request parameters: firstName={}, lastName={}, email={}, state={}",
+                    firstName, lastName, email, state);
                 exchange.sendResponseHeaders(400, 0);
                 exchange.close();
                 return;
@@ -63,6 +73,7 @@ public class SimpleWebServer {
             CustomerCommand customerCommand = new CustomerCommand.Create(firstName, lastName, email, state);
             publicCustomerCommandPort.submit(customerCommand);
             String message = String.format("Customer %s %s Successfully Created", firstName, lastName);
+            logger.info("Successfully created customer: {} {}", firstName, lastName);
             exchange.getResponseHeaders().set("Location", "/?message=" + message.replace(" ", "%20"));
             exchange.sendResponseHeaders(303, -1);
             exchange.close();
