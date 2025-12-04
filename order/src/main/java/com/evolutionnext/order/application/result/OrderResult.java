@@ -4,7 +4,7 @@ package com.evolutionnext.order.application.result;
 import com.evolutionnext.order.domain.aggregate.order.OrderId;
 import com.evolutionnext.order.domain.aggregate.product.ProductId;
 
-public sealed interface OrderResult permits OrderResult.Error, OrderResult.OrderCancelled, OrderResult.OrderCreated, OrderResult.OrderItemAdded, OrderResult.OrderPlaced {
+public sealed interface OrderResult permits OrderResult.Error, OrderResult.NotFound, OrderResult.OrderCancelled, OrderResult.OrderCreated, OrderResult.OrderItemAdded, OrderResult.OrderPlaced {
 
     record OrderCancelled(OrderId orderId) implements OrderResult {
     }
@@ -19,5 +19,8 @@ public sealed interface OrderResult permits OrderResult.Error, OrderResult.Order
     }
 
     public record OrderCreated(OrderId id) implements OrderResult {
+    }
+
+    public record NotFound(OrderId orderId) implements OrderResult {
     }
 }

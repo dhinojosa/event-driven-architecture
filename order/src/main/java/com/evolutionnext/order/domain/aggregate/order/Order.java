@@ -24,6 +24,13 @@ public class Order {
         this.items = new ArrayList<>();
     }
 
+    public Order(OrderId orderId, CustomerId customerId, List<OrderItem> items) {
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.status = OrderStatus.CREATED;
+        this.items = items;
+    }
+
     public void placeOrder() {
         if (this.status != OrderStatus.CREATED) {
             throw new IllegalStateException("Order cannot be placed in its current state");
@@ -47,7 +54,7 @@ public class Order {
         this.events.add(new OrderEvent.OrderCancelled(orderId, "Order cancelled by customer"));
     }
 
-    public static Order create(OrderId orderId, CustomerId customerId, String state) {
+    public static Order create(OrderId orderId, CustomerId customerId) {
         return new Order(orderId, customerId);
     }
 

@@ -3,10 +3,10 @@ package com.evolutionnext.order.infrastructure.adapter.in;
 
 import com.evolutionnext.order.application.command.OrderCommand;
 import com.evolutionnext.order.application.result.OrderResult;
-import com.evolutionnext.order.application.service.InMemoryOrderCommandApplicationService;
 import com.evolutionnext.order.domain.aggregate.customer.CustomerId;
 import com.evolutionnext.order.domain.aggregate.order.OrderId;
 import com.evolutionnext.order.domain.aggregate.product.ProductId;
+import com.evolutionnext.order.port.in.PublicOrderCommandPort;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
@@ -23,10 +23,10 @@ import static com.evolutionnext.orders.customer.web.ResourceLoader.serveFromReso
 
 public class IndexHandler implements HttpHandler {
     private static final Logger logger = LoggerFactory.getLogger(IndexHandler.class);
-    private final InMemoryOrderCommandApplicationService orderCommandApplicationService;
+    private final PublicOrderCommandPort publicOrderCommandPort;
 
-    public IndexHandler(InMemoryOrderCommandApplicationService orderCommandApplicationService) {
-        this.orderCommandApplicationService = orderCommandApplicationService;
+    public IndexHandler(PublicOrderCommandPort publicOrderCommandPort) {
+        this.publicOrderCommandPort = publicOrderCommandPort;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class IndexHandler implements HttpHandler {
             CustomerId customerId = new CustomerId(UUID.fromString(customerIdString));
             OrderId orderId = new OrderId(UUID.randomUUID());
 
-            orderCommandApplicationService.submit(
+            publicOrderCommandPort.submit(
                 new OrderCommand.CreateOrder(orderId, customerId)
             );
 
@@ -68,13 +68,13 @@ public class IndexHandler implements HttpHandler {
                     int quantity = Integer.parseInt(quantities.get(i));
                     BigDecimal price = new BigDecimal(prices.get(i));
 
-                    orderCommandApplicationService.submit(
+                    publicOrderCommandPort.submit(
                         new OrderCommand.AddOrderItem(orderId, productId, quantity, price)
                     );
                 }
             }
 
-            OrderResult result = orderCommandApplicationService.submit(
+            OrderResult result = publicOrderCommandPort.submit(
                 new OrderCommand.PlaceOrder(orderId)
             );
 

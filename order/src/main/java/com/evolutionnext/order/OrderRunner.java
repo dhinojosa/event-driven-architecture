@@ -2,6 +2,7 @@ package com.evolutionnext.order;
 
 import com.evolutionnext.order.application.service.InMemoryOrderCommandApplicationService;
 import com.evolutionnext.order.application.service.OrderQueryApplicationService;
+import com.evolutionnext.order.application.service.OutboxOrderCommandApplicationService;
 import com.evolutionnext.order.events.OrderEventMessage;
 import com.evolutionnext.order.infrastructure.adapter.in.CustomerHandler;
 import com.evolutionnext.order.infrastructure.adapter.in.IndexHandler;
@@ -9,9 +10,11 @@ import com.evolutionnext.order.infrastructure.adapter.in.ProductHandler;
 import com.evolutionnext.order.infrastructure.adapter.in.SimpleWebServer;
 import com.evolutionnext.order.infrastructure.adapter.out.OrderEventKafkaPublisher;
 import com.evolutionnext.order.infrastructure.adapter.out.PostgresCustomerRepository;
+import com.evolutionnext.order.infrastructure.adapter.out.PostgresOrderRepository;
 import com.evolutionnext.order.infrastructure.adapter.out.PostgresProductRepository;
 import com.evolutionnext.order.port.out.CustomerRepository;
 import com.evolutionnext.order.port.out.OrderEventPublisher;
+import com.evolutionnext.order.port.out.OrderRepository;
 import com.evolutionnext.order.port.out.ProductRepository;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -60,8 +63,11 @@ public class OrderRunner {
         ProductRepository productRepository = new PostgresProductRepository(dataSource);
 
         OrderQueryApplicationService orderQueryApplicationService = new OrderQueryApplicationService(customerRepository, productRepository);
-        OrderEventPublisher orderEventPublisher = new OrderEventKafkaPublisher(producer);
-        InMemoryOrderCommandApplicationService orderCommandApplicationService = new InMemoryOrderCommandApplicationService(orderEventPublisher);
+//        OrderEventPublisher orderEventPublisher = new OrderEventKafkaPublisher(producer);
+//        InMemoryOrderCommandApplicationService orderCommandApplicationService = new InMemoryOrderCommandApplicationService(orderEventPublisher);
+
+        OrderRepository orderRepository = new PostgresOrderRepository(dataSource);
+        OutboxOrderCommandApplicationService orderCommandApplicationService = new OutboxOrderCommandApplicationService(orderRepository);
 
         return new SimpleWebServer(
             new IndexHandler(orderCommandApplicationService),

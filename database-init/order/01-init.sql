@@ -37,18 +37,12 @@ CREATE TABLE orderItem
     FOREIGN KEY (productID) REFERENCES product (productID)
 );
 
-CREATE TABLE order_outbox
-(
-    id BIGSERIAL PRIMARY KEY,
-    aggregate_type VARCHAR(50) NOT NULL,
-    aggregate_id UUID NOT NULL,
-    event_type     VARCHAR(50) NOT NULL,
-    payload JSONB NOT NULL,
-    timestamp      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    FOREIGN KEY (aggregate_id)
-        REFERENCES "order" (orderID)
+CREATE TABLE order_outbox (
+                                id UUID PRIMARY KEY,
+                                aggregatetype VARCHAR(255) NOT NULL,
+                                aggregateid VARCHAR(255) NOT NULL,
+                                type VARCHAR(255) NOT NULL,
+                                payload BYTEA
 );
 
-CREATE INDEX idx_order_outbox_ts ON order_outbox (timestamp);
-CREATE INDEX idx_order_outbox_aggregate_id ON order_outbox (aggregate_id);
+CREATE INDEX idx_order_outbox_aggregate_id ON order_outbox (aggregateid);
