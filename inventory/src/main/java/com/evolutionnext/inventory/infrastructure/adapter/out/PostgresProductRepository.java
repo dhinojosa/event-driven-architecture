@@ -38,7 +38,7 @@ public class PostgresProductRepository implements ProductRepository {
         try {
             KafkaAvroSerializer serializer = new KafkaAvroSerializer();
             serializer.configure(
-                Map.of("schema.registry.url", "http://schema-registry:8081"),
+                Map.of("schema.registry.url", "http://localhost:8081"),
                 false
             );
             return serializer.serialize("inventory", record);

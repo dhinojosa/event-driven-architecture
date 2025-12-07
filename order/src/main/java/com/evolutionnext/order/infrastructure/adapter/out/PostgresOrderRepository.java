@@ -29,7 +29,7 @@ public class PostgresOrderRepository implements OrderRepository {
         try {
             KafkaAvroSerializer serializer = new KafkaAvroSerializer();
             serializer.configure(
-                Map.of("schema.registry.url", "http://schema-registry:8081"),
+                Map.of("schema.registry.url", "http://localhost:8081"),
                 false
             );
             return serializer.serialize("orders", record);
