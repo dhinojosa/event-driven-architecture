@@ -2,7 +2,6 @@ package com.evolutionnext.order.customer;
 
 
 import com.evolutionnext.order.customer.application.service.CustomerApplicationService;
-import com.evolutionnext.order.customer.domain.aggregate.CustomerId;
 import com.evolutionnext.order.customer.infrastructure.adapter.in.KafkaCustomerConsumer;
 import com.evolutionnext.order.customer.infrastructure.adapter.out.PostgresCustomerRepository;
 import com.evolutionnext.order.customer.port.out.CustomerRepository;
@@ -10,7 +9,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 
-public class Runner {
+public class OrderCustomerConsumerRunner {
     private static DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[]{"localhost"});

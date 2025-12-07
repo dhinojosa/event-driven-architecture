@@ -17,9 +17,7 @@
         <module>order-customer-consumer</module>
         <module>order-product-consumer</module>
         <module>customer</module>
-        <module>customer-order-consumer</module>
         <module>inventory</module>
-        <module>inventory-order-consumer</module>
         <module>web-util</module>
     </modules>
 

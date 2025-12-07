@@ -56,33 +56,24 @@
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-schema-registry-maven-plugin</artifactId>
                 <version>8.1.0</version>
-                <executions>
-                    <execution>
-                        <id>download-schemas</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>download</goal>
-                        </goals>
-                        <configuration>
-                            <schemaRegistryUrls>
-                                <param>http://127.0.0.1:8081</param>
-                            </schemaRegistryUrls>
-                            <subjectPatterns>
-                                <param>^inventory-(key|value)$</param>
-                                <param>productCreatedMessage</param>
-                                <param>stockChanged</param>
-                                <param>priceChanged</param>
-                            </subjectPatterns>
-                            <versions>
-                                <param>latest</param>
-                                <param>latest</param>
-                                <param>latest</param>
-                                <param>latest</param>
-                            </versions>
-                            <outputDirectory>${project.basedir}/src/main/avro</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>http://127.0.0.1:8081</param>
+                    </schemaRegistryUrls>
+                    <subjectPatterns>
+                        <param>^inventory-(key|value)$</param>
+                        <param>productCreatedMessage</param>
+                        <param>stockChanged</param>
+                        <param>priceChanged</param>
+                    </subjectPatterns>
+                    <versions>
+                        <param>latest</param>
+                        <param>latest</param>
+                        <param>latest</param>
+                        <param>latest</param>
+                    </versions>
+                    <outputDirectory>${project.basedir}/src/main/avro</outputDirectory>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.avro</groupId>

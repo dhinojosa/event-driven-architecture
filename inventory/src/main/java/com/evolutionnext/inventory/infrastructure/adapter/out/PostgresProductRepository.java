@@ -8,20 +8,13 @@ import com.evolutionnext.inventory.port.out.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import org.apache.avro.Schema;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -30,13 +23,13 @@ import java.util.Map;
 
 import static com.evolutionnext.inventory.events.EventType.PRODUCT_CREATED;
 
-public class PostgresOutboxRepository implements ProductRepository {
-    private static final Logger logger = LoggerFactory.getLogger(PostgresOutboxRepository.class);
+public class PostgresProductRepository implements ProductRepository {
+    private static final Logger logger = LoggerFactory.getLogger(PostgresProductRepository.class);
 
     private final DataSource dataSource;
     private final ObjectMapper objectMapper;
 
-    public PostgresOutboxRepository(DataSource dataSource) {
+    public PostgresProductRepository(DataSource dataSource) {
         this.dataSource = dataSource;
         this.objectMapper = new ObjectMapper();
     }

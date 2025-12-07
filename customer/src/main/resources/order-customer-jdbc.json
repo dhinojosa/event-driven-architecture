@@ -1,0 +1,20 @@
+{
+    "name": "jdbc-sink-order-history",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "topics": "ORDER_HISTORY",
+        "connection.url": "jdbc:postgresql://postgres-customer:5432/customerdb",
+        "connection.user": "postgres",
+        "connection.password": "postgres",
+        "auto.create": "false",
+        "insert.mode": "upsert",
+        "pk.mode": "record_key",
+        "pk.fields": "orderId",
+        "table.name.format": "orderhistory",
+        "transforms": "TimestampConverter",
+        "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
+        "transforms.TimestampConverter.target.type": "Timestamp",
+        "transforms.TimestampConverter.field": "TIMESTAMP"
+    }
+}

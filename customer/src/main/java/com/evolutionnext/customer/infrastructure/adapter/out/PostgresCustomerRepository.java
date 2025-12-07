@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PostgresCustomerOutboxRepository implements CustomerRepository {
-    private static final Logger logger = LoggerFactory.getLogger(PostgresCustomerOutboxRepository.class);
+public class PostgresCustomerRepository implements CustomerRepository {
+    private static final Logger logger = LoggerFactory.getLogger(PostgresCustomerRepository.class);
     private static final CustomerEvent CUSTOMER_CREATED = CustomerEvent.CUSTOMER_CREATED;
 
     private enum CustomerEvent {
@@ -28,7 +28,7 @@ public class PostgresCustomerOutboxRepository implements CustomerRepository {
 
     private final DataSource dataSource;
 
-    public PostgresCustomerOutboxRepository(DataSource dataSource) {
+    public PostgresCustomerRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 

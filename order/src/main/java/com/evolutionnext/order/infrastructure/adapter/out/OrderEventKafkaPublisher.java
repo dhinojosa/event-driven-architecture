@@ -4,12 +4,16 @@ import com.evolutionnext.order.domain.aggregate.order.Order;
 import com.evolutionnext.order.domain.events.OrderEvent;
 import com.evolutionnext.order.events.*;
 import com.evolutionnext.order.port.out.OrderEventPublisher;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.Properties;
 
 public class OrderEventKafkaPublisher implements OrderEventPublisher {
     private static final Logger logger = LoggerFactory.getLogger(OrderEventKafkaPublisher.class);
@@ -19,6 +23,23 @@ public class OrderEventKafkaPublisher implements OrderEventPublisher {
     public OrderEventKafkaPublisher(KafkaProducer<String, OrderEventMessage> producer) {
         this.producer = producer;
     }
+
+    public OrderEventKafkaPublisher(String bootstrapServers, String schemaRegistryUrl) {
+        Properties properties = new Properties();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+        properties.put("schema.registry.url", schemaRegistryUrl);
+        properties.put("auto.register.schemas", "false");
+        properties.put("use.latest.version", "true");
+        properties.put("latest.compatibility.strict", "false");
+        this.producer = new KafkaProducer<>(properties);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Closing Kafka Producer");
+            producer.close();
+        }));
+    }
+
 
     @Override
     public void publish(OrderEvent orderEvent) {

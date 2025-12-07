@@ -31,15 +31,14 @@ CREATE INDEX idx_orderhistory_customerid ON orderHistory (customerID);
 CREATE INDEX idx_orderhistory_timestamp ON orderHistory (timestamp);
 
 -- Create the stateReport table
-CREATE TABLE stateReport
-(
-    state  CHAR(2) PRIMARY KEY,
-    amount NUMERIC(19, 4) NOT NULL DEFAULT 0,
-    count  INTEGER        NOT NULL DEFAULT 0
-);
-
--- Create index on amount for aggregate queries
-CREATE INDEX idx_statereport_amount ON stateReport (amount);
+CREATE OR REPLACE VIEW statereport AS
+SELECT
+    c.state,
+    SUM(oh.total) as amount,
+    COUNT(oh.orderid) as count
+FROM orderHistory oh
+         JOIN customer c ON oh.customerID = c.customerID
+GROUP BY c.state;
 
 CREATE TABLE customer_outbox
 (

@@ -12,6 +12,7 @@ import com.evolutionnext.order.infrastructure.adapter.out.OrderEventKafkaPublish
 import com.evolutionnext.order.infrastructure.adapter.out.PostgresCustomerRepository;
 import com.evolutionnext.order.infrastructure.adapter.out.PostgresOrderRepository;
 import com.evolutionnext.order.infrastructure.adapter.out.PostgresProductRepository;
+import com.evolutionnext.order.port.in.PublicOrderCommandPort;
 import com.evolutionnext.order.port.out.CustomerRepository;
 import com.evolutionnext.order.port.out.OrderEventPublisher;
 import com.evolutionnext.order.port.out.OrderRepository;
@@ -38,40 +39,26 @@ public class OrderRunner {
         dataSource.setUser("postgres");
         dataSource.setPassword("postgres");
 
-        Properties properties = new Properties();
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
-        properties.put("schema.registry.url", "http://localhost:8081");
-        properties.put("auto.register.schemas", "false");
-        properties.put("use.latest.version", "true");
-        properties.put("latest.compatibility.strict", "false");
-
-        KafkaProducer<String, OrderEventMessage> producer = new KafkaProducer<>(properties);
-        SimpleWebServer simpleWebServer = createWebServer(dataSource, producer);
-        simpleWebServer.start(9003);
-        logger.info("Server started on port 9003");
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            logger.info("Closing Kafka Producer");
-            producer.close();
-        }));
-    }
-
-    private static SimpleWebServer createWebServer(PGSimpleDataSource dataSource, KafkaProducer<String, OrderEventMessage> producer) {
         CustomerRepository customerRepository = new PostgresCustomerRepository(dataSource);
         ProductRepository productRepository = new PostgresProductRepository(dataSource);
 
         OrderQueryApplicationService orderQueryApplicationService = new OrderQueryApplicationService(customerRepository, productRepository);
-//        OrderEventPublisher orderEventPublisher = new OrderEventKafkaPublisher(producer);
-//        InMemoryOrderCommandApplicationService orderCommandApplicationService = new InMemoryOrderCommandApplicationService(orderEventPublisher);
 
-        OrderRepository orderRepository = new PostgresOrderRepository(dataSource);
-        OutboxOrderCommandApplicationService orderCommandApplicationService = new OutboxOrderCommandApplicationService(orderRepository);
-
-        return new SimpleWebServer(
-            new IndexHandler(orderCommandApplicationService),
+        SimpleWebServer simpleWebServer = new SimpleWebServer(
+            new IndexHandler(createPublisherService()),
             new ProductHandler(orderQueryApplicationService),
             new CustomerHandler(orderQueryApplicationService));
+        simpleWebServer.start(9003);
+        logger.info("Server started on port 9003");
+    }
+
+    private static PublicOrderCommandPort createPublisherService() {
+        OrderEventPublisher orderEventPublisher = new OrderEventKafkaPublisher("localhost:9092", "http://localhost:8081");
+        return new InMemoryOrderCommandApplicationService(orderEventPublisher);
+    }
+
+    private static PublicOrderCommandPort createOutboxService(PGSimpleDataSource dataSource) {
+        OrderRepository orderRepository = new PostgresOrderRepository(dataSource);
+        return new OutboxOrderCommandApplicationService(orderRepository);
     }
 }
