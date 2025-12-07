@@ -16,10 +16,7 @@ import java.io.IOException;
 public class CustomerRunner {
 
     public static void main(String[] args) throws IOException {
-        PublicCustomerCommandPort customerCommandPort = createPublisherService();
-        //PublicCustomerCommandPort customerCommandPort = createOutboxService();
-
-        SimpleWebServer simpleWebServer = new SimpleWebServer(customerCommandPort);
+        SimpleWebServer simpleWebServer = new SimpleWebServer(createPublisherService());
         simpleWebServer.start(9000);
         System.out.println("Server started on port 9000");
     }
