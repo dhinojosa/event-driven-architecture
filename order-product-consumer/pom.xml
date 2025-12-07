@@ -62,7 +62,7 @@
                     </schemaRegistryUrls>
                     <subjectPatterns>
                         <param>^inventory-(key|value)$</param>
-                        <param>productCreatedMessage</param>
+                        <param>productCreated</param>
                         <param>stockChanged</param>
                         <param>priceChanged</param>
                     </subjectPatterns>
