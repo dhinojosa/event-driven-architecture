@@ -517,7 +517,9 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_lab_domain_driven_design_and_hexagonal_architecture">Lab: Domain Driven Design and Hexagonal Architecture</a></li>
+<li><a href="#_lab_writing_an_aggregate">Lab: Writing an Aggregate</a></li>
+<li><a href="#_lab_writing_a_producer">Lab: Writing a Producer</a></li>
+<li><a href="#_lab_writing_a_consumer">Lab: Writing a Consumer</a></li>
 <li><a href="#_lab_preliminary">Lab: Preliminary</a>
 <ul class="sectlevel2">
 <li><a href="#_setting_up_our_services">Setting up our services</a></li>
@@ -554,7 +556,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_lab_domain_driven_design_and_hexagonal_architecture">Lab: Domain Driven Design and Hexagonal Architecture</h2>
+<h2 id="_lab_writing_an_aggregate">Lab: Writing an Aggregate</h2>
 <div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
@@ -566,6 +568,69 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 </li>
 <li>
 <p>Let&#8217;s discuss how each one is laid out, particularly domain events, so we can have a better understanding of how this architecture works so well.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stop.png" alt="stop" width="10%" height="10%">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lab_writing_a_producer">Lab: Writing a Producer</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We will review the producer code both customer and inventory</p>
+</li>
+<li>
+<p>Look in the following locations:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><em>src/main/java/com/evolutionnext/customer/infrastructure/adapter</em></p>
+</li>
+<li>
+<p><em>src/main/java/com/evolutionnext/inventory/infrastructure/adapter</em></p>
+</li>
+<li>
+<p><em>src/main/java/com/evolutionnext/order/infrastructure/adapter</em></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stop.png" alt="stop" width="10%" height="10%">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lab_writing_a_consumer">Lab: Writing a Consumer</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We will review the consumer code both order-customer-consumer, and order-product-consumer</p>
+</li>
+<li>
+<p>Look in the following locations:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><em>src/main/java/com/evolutionnext/order/product/adapter</em></p>
+</li>
+<li>
+<p><em>src/main/java/com/evolutionnext/order/customer/infrastructure/adapter</em></p>
+</li>
+</ol>
+</div>
 </li>
 </ol>
 </div>
@@ -1499,7 +1564,7 @@ This is <em>enrichment</em> of our data, and if this data was on a separate data
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-07 16:00:12 UTC
+Last updated 2025-12-08 12:53:58 UTC
 </div>
 </div>
 </body>
