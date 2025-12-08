@@ -10,11 +10,13 @@
         "auto.create": "false",
         "insert.mode": "upsert",
         "pk.mode": "record_key",
-        "pk.fields": "orderId",
+        "pk.fields": "orderid",
         "table.name.format": "orderhistory",
-        "transforms": "TimestampConverter",
+        "transforms": "TimestampConverter,LowerCaseFields",
         "transforms.TimestampConverter.type": "org.apache.kafka.connect.transforms.TimestampConverter$Value",
         "transforms.TimestampConverter.target.type": "Timestamp",
-        "transforms.TimestampConverter.field": "TIMESTAMP"
+        "transforms.TimestampConverter.field": "TIMESTAMP",
+        "transforms.LowerCaseFields.type": "org.apache.kafka.connect.transforms.ReplaceField$Value",
+        "transforms.LowerCaseFields.renames": "ORDERID:orderid,CUSTOMERID:customerid,TIMESTAMP:timestamp,TOTAL:total"
     }
 }
