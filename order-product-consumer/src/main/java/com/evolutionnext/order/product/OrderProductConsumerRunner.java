@@ -1,8 +1,8 @@
 package com.evolutionnext.order.product;
 
 
-import com.evolutionnext.order.product.adapter.in.ProductConsumer;
-import com.evolutionnext.order.product.adapter.out.PostgresProductRepository;
+import com.evolutionnext.order.product.infrastructure.adapter.in.ProductConsumer;
+import com.evolutionnext.order.product.infrastructure.adapter.out.PostgresProductRepository;
 import com.evolutionnext.order.product.application.service.InventoryApplicationService;
 import com.evolutionnext.order.product.port.in.InternalProductCommandPort;
 import com.evolutionnext.order.product.port.out.ProductRepository;

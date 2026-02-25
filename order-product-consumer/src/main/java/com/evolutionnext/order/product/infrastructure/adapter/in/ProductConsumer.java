@@ -1,4 +1,4 @@
-package com.evolutionnext.order.product.adapter.in;
+package com.evolutionnext.order.product.infrastructure.adapter.in;
 
 import com.evolutionnext.inventory.events.*;
 import com.evolutionnext.order.product.application.command.InventoryCommand;

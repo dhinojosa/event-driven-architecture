@@ -1,4 +1,4 @@
-package com.evolutionnext.order.product.adapter.out;
+package com.evolutionnext.order.product.infrastructure.adapter.out;
 
 
 import com.evolutionnext.order.product.domain.aggregate.Product;
