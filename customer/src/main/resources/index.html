@@ -111,7 +111,11 @@
     document.getElementById('autofill').addEventListener('click', () => {
         document.getElementById('firstName').value = faker.person.firstName();
         document.getElementById('lastName').value = faker.person.lastName();
-        document.getElementById('email').value = faker.internet.email();
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const providers = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'icloud.com'];
+        const randomProvider = providers[Math.floor(Math.random() * providers.length)];
+        document.getElementById('email').value = `${firstName}_${lastName}@${randomProvider}`;
         document.getElementById('state').value = faker.location.state({abbreviated: true});
     });
 </script>
