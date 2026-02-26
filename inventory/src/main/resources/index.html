@@ -61,6 +61,7 @@
         document.getElementById('name').value = faker.commerce.productName();
         document.getElementById('description').value = faker.commerce.productDescription();
         document.getElementById('price').value = faker.commerce.price({min: 1, max: 1000, dec: 2});
+        document.getElementById('stock').value = faker.number.int({min: 2, max: 100});
     });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
