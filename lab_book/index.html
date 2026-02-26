@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
 <meta name="author" content="Daniel Hinojosa">
-<title>NFJS Event Driven Architecture Labs</title>
+<title>Event Driven Architecture Labs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -510,7 +510,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>NFJS Event Driven Architecture Labs</h1>
+<h1>Event Driven Architecture Labs</h1>
 <div class="details">
 <span id="author" class="author">Daniel Hinojosa</span><br>
 </div>
@@ -585,20 +585,20 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>We will review the producer code both customer and inventory</p>
+<p>We will review the producer code for <em>customer</em>, <em>inventory</em>, and <em>order</em></p>
 </li>
 <li>
 <p>Look in the following locations:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><em>src/main/java/com/evolutionnext/customer/infrastructure/adapter</em></p>
+<p><em>customer/src/main/java/com/evolutionnext/customer/infrastructure/adapter</em></p>
 </li>
 <li>
-<p><em>src/main/java/com/evolutionnext/inventory/infrastructure/adapter</em></p>
+<p><em>inventory/src/main/java/com/evolutionnext/inventory/infrastructure/adapter</em></p>
 </li>
 <li>
-<p><em>src/main/java/com/evolutionnext/order/infrastructure/adapter</em></p>
+<p><em>order/src/main/java/com/evolutionnext/order/infrastructure/adapter</em></p>
 </li>
 </ol>
 </div>
@@ -618,17 +618,17 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>We will review the consumer code both order-customer-consumer, and order-product-consumer</p>
+<p>We will review the consumer code both <em>order-customer-consumer</em>, and <em>order-product-consumer</em></p>
 </li>
 <li>
 <p>Look in the following locations:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p><em>src/main/java/com/evolutionnext/order/product/adapter</em></p>
+<p><em>order-customer-consumer/src/main/java/com/evolutionnext/customer/infrastructure/adapter/in</em></p>
 </li>
 <li>
-<p><em>src/main/java/com/evolutionnext/order/customer/infrastructure/adapter</em></p>
+<p><em>order-product-consumer/src/main/java/com/evolutionnext/order/product/infrastructure/adapter/in</em></p>
 </li>
 </ol>
 </div>
@@ -671,7 +671,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>On the bottom of your online VS Code, you will see the following image <span class="image"><img src="./images/lightweight-mode.png" alt="lightweight mode"></span>. Click on it, so that way we can go into "Standard Mode" which offers compilation, testing and other services</p>
+<p>On the bottom of your online VS Code, you will see the following image <span class="image"><img src="./images/lightweight-mode.png" alt="lightweight mode"></span>. Click on it, so that way we can go into "Standard Mode," which offers compilation, testing and other services</p>
 </li>
 </ol>
 </div>
@@ -748,7 +748,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Go back to the root of the project <code>cd ..</code></p>
+<p>Go back to the terminal, and change to the root of the project <code>cd ..</code></p>
 </li>
 <li>
 <p><code>cd inventory</code></p>
@@ -757,7 +757,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <p><code>mvn io.confluent:kafka-schema-registry-maven-plugin:register</code></p>
 </li>
 <li>
-<p>You can verify your schema uploaded by going to the appropriate url, changing <code>customer-value</code> to <code>inventory-value</code>.</p>
+<p>You can verify your schema uploaded by going to <code>&lt;schema-registry-url&gt;/subjects/inventory-value/versions/1</code>.</p>
 </li>
 <li>
 <p>You will notice this one isn&#8217;t quite that simple since one schema depends on other schemas.</p>
@@ -770,7 +770,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>Go back to the root of the project <code>cd ..</code></p>
+<p>Go back to the terminal, and go back to the root of the project <code>cd ..</code></p>
 </li>
 <li>
 <p><code>cd order</code></p>
@@ -779,7 +779,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <p><code>mvn io.confluent:kafka-schema-registry-maven-plugin:register</code></p>
 </li>
 <li>
-<p>You can verify your schema uploaded by going to the appropriate url, changing <code>customer-value</code> to <code>inventory-value</code>.</p>
+<p>You can verify your schema uploaded by going to <code>&lt;schema-registry-url&gt;/subjects/orders-value/versions/1</code>.</p>
 </li>
 <li>
 <p>You will notice this one too isn&#8217;t quite that simple since one schema depends on other schemas.</p>
@@ -836,7 +836,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 </div>
 </li>
 <li>
-<p>Couple of things to notice. These schemas are to consume messages, these schemas will also auto-generate code that we can use to develop our code.</p>
+<p>Couple of things to notice. These schemas are used to consume messages, these schemas will also auto-generate code that we can use to develop our code.</p>
 </li>
 </ol>
 </div>
@@ -854,10 +854,10 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>First, we will look at the producer in <code>customer</code> and view how we are producing a message and analyzing what kind of message we are sending.</p>
+<p>First, we will look at the producer in the <code>customer</code> module and view how we are producing a message and analyzing what kind of message we are sending.</p>
 </li>
 <li>
-<p>Next, let&#8217;s look in <code>order-customer-consumer</code> and view how we are consuming the message that is being sent by the <code>customer</code>. Let&#8217;s analyze what we are doing with the payload</p>
+<p>Next, let&#8217;s look in <code>order-customer-consumer</code> module and view how we are consuming the message that is being sent by the <code>customer</code>. Let&#8217;s analyze what we are doing with the payload</p>
 </li>
 <li>
 <p>Now, let&#8217;s look at <code>inventory</code> and view how we are producing a message and analyzing the messages we are sending from this bounded context.</p>
@@ -866,7 +866,7 @@ pre.pygments .tok-il { color: #40A070 } /* Literal.Number.Integer.Long */
 <p>Let&#8217;s look in <code>order-product-consumer</code> and view how we are consuming the message that is being sent by the <code>inventory</code>. Let&#8217;s analyze what we are doing with the payload</p>
 </li>
 <li>
-<p>Now the exciting part, let&#8217;s run all these services. First, open the customer module and open in your editor the file <em>src/main/java/com/evolutionnext/customer/CustomerRunner.java</em></p>
+<p>Now the exciting part, let&#8217;s run all these services. First, open the <code>customer</code> module and open in your editor the file <em>src/main/java/com/evolutionnext/customer/CustomerRunner.java</em></p>
 </li>
 <li>
 <p>Click on the <em>Run</em> option above the <code>public static void main(String[] args)</code>. If this doesn&#8217;t work, be sure you are running in <em>Standard Mode</em>, ask the instructor if you need help.</p>
@@ -1046,10 +1046,24 @@ Choose<span class="tok-w"> </span>one<span class="tok-w"> </span>of<span class="
 </div>
 </li>
 <li>
+<p>When prompted for where to install the selection, choose <code>2</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="shell"><span></span>The<span class="tok-w"> </span>component<span class="tok-w"> </span>can<span class="tok-w"> </span>be<span class="tok-w"> </span>installed<span class="tok-w"> </span><span class="tok-k">in</span><span class="tok-w"> </span>any<span class="tok-w"> </span>of<span class="tok-w"> </span>the<span class="tok-w"> </span>following<span class="tok-w"> </span>Confluent<span class="tok-w"> </span>Platform<span class="tok-w"> </span>installations:
+<span class="tok-w">  </span><span class="tok-m">1</span>.<span class="tok-w"> </span>/<span class="tok-w"> </span><span class="tok-o">(</span>installed<span class="tok-w"> </span>rpm/deb<span class="tok-w"> </span>package<span class="tok-o">)</span>
+<span class="tok-w">  </span><span class="tok-m">2</span>.<span class="tok-w"> </span>/<span class="tok-w"> </span><span class="tok-o">(</span>where<span class="tok-w"> </span>this<span class="tok-w"> </span>tool<span class="tok-w"> </span>is<span class="tok-w"> </span>installed<span class="tok-o">)</span>
+Choose<span class="tok-w"> </span>one<span class="tok-w"> </span>of<span class="tok-w"> </span>these<span class="tok-w"> </span>to<span class="tok-w"> </span><span class="tok-k">continue</span><span class="tok-w"> </span>the<span class="tok-w"> </span>installation<span class="tok-w"> </span><span class="tok-o">(</span><span class="tok-m">1</span>-2<span class="tok-o">)</span>:<span class="tok-w"> </span><span class="tok-m">2</span></code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>When asked <code>Do you want to install this into /usr/share/confluent-hub-components? (yN)</code>, choose <code>y</code></p>
 </li>
 <li>
-<p>Choose <code>y</code> again to choose the license agreement</p>
+<p>Choose <code>y</code> again to agree to the license agreement</p>
+</li>
+<li>
+<p>When asked <code>Do you want to continue? (yN)</code>, choose <code>y</code></p>
 </li>
 <li>
 <p>When asked <code>Do you want to update all detected configs? (yN)</code>, choose <code>y</code></p>
@@ -1241,7 +1255,7 @@ Choose<span class="tok-w"> </span>one<span class="tok-w"> </span>of<span class="
 </div>
 </li>
 <li>
-<p>Follow the same process and add the connection for the customerdb</p>
+<p>Follow the same process and add the connection for the orderdb</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -1459,7 +1473,7 @@ Choose<span class="tok-w"> </span>one<span class="tok-w"> </span>of<span class="
 </div>
 </li>
 <li>
-<p>Add some new orders from your <code>orders</code> web page, and come back and view the orders come in. When you are done with viewing the query terminate the query with kbd:CTRL+C</p>
+<p>Add some new orders from your <code>orders</code> web page, and come back and view the orders come in. When you are done with viewing the query terminate the query with <span class="keyseq"><kbd>CTRL</kbd>+<kbd>C</kbd></span></p>
 </li>
 <li>
 <p>We need to refine this query, so we can fit it into a table in the <code>customer</code> service. Our goal is to shape it to this table:</p>
@@ -1475,7 +1489,7 @@ Choose<span class="tok-w"> </span>one<span class="tok-w"> </span>of<span class="
 </div>
 </div>
 <div class="paragraph">
-<p>We do so by running the following queries, see how we can build up to what we need. All these are live feed, you can stop listening by hitting <span class="keyseq"><kbd>CTRL</kbd>+<kbd>C</kbd></span></p>
+<p>We do so by running the following queries, see how we can build up to what we need. All these are live feeds, you can stop listening by hitting <span class="keyseq"><kbd>CTRL</kbd>+<kbd>C</kbd></span></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1517,7 +1531,7 @@ WHERE<span class="tok-w"> </span><span class="tok-nv">eventType</span><span clas
 <p>Verify that the topic <code>ORDER_ITEMS_FLATTENED</code> is created in the Confluent Control Center.</p>
 </li>
 <li>
-<p>We still need some more processing to do, this was just a staging topic as a means to an end. Run the following query and see if it matches the DDL you saw earlier on this page.</p>
+<p>We still need some more processing to do; this was just a staging topic as a means to an end. Run the following query and see if it matches the DDL you saw earlier on this page.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight"><code data-lang="shell"><span></span>SELECT
@@ -1559,13 +1573,28 @@ GROUP<span class="tok-w"> </span>BY<span class="tok-w"> </span>orderId<span clas
 <p>In the modules <code>customer</code>, there is a JSON file with the connector located in the <em>src/main/resources</em> folder called <em>order_customer-jdbc.json</em></p>
 </li>
 <li>
-<p>Now, let&#8217;s fit this into our table using a sink. Go to Confluent Control Center upload the connector <em>order_customer-jdbc.json</em> which will take from the topic <em>ORDER_HISTORY</em> and insert the results into order_history in the <code>orders</code> database.</p>
+<p>Now, let&#8217;s fit this into our table using a sink. Go to Confluent Control Center upload the connector <em>order_customer-jdbc.json</em> which will take from the topic <em>ORDER_HISTORY</em> and insert the results into <code>order_history</code> in the <code>customer</code> database.</p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/postgres_customer_connector.png" alt="postgres customer connector">
+</div>
+</div>
 </li>
 <li>
 <p>View the results in the <code>orderhistory</code> table in the <code>customer</code> database. You can also view the <code>statereport</code> table which is a <em>materialized view</em> based off of the orders.
-This is <em>enrichment</em> of our data, and if this data was on a separate database, we would have a CQRS implementation.</p>
+This is <em>enrichment</em> of our data, and if this data was on a separate database, we would have a CQRS implementation since we would have a <em>read model</em>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="./images/sql_tools_order_history.png" alt="sql tools order history">
+</div>
+</div>
 </li>
 </ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./images/stop.png" alt="stop" width="10%" height="10%">
+</div>
 </div>
 </div>
 </div>
@@ -1573,7 +1602,7 @@ This is <em>enrichment</em> of our data, and if this data was on a separate data
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-08 12:53:58 UTC
+Last updated 2026-02-25 21:57:50 UTC
 </div>
 </div>
 </body>
