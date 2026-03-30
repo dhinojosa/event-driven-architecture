@@ -4,10 +4,9 @@ import com.evolutionnext.customer.domain.aggregate.Customer;
 import com.evolutionnext.customer.domain.events.CustomerEvent;
 import com.evolutionnext.customer.events.CustomerCreatedMessage;
 import com.evolutionnext.customer.port.out.CustomerPublisher;
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.time.Instant;
@@ -22,7 +21,9 @@ public class KafkaCustomerPublisher implements CustomerPublisher {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
-        props.put("schema.registry.url", schemaRegistryUrl);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 20);
+        props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
         this.producer = new KafkaProducer<>(props);
     }
 
@@ -40,7 +41,15 @@ public class KafkaCustomerPublisher implements CustomerPublisher {
             };
 
         try {
-            producer.send(producerRecord);
+            producer.send(producerRecord, (metadata, exception) -> {
+                if (exception != null) {
+                    exception.printStackTrace();
+                } else {
+                    System.out.printf("Received message with key %s and value %s at offset %d%n",
+                        producerRecord.key(), producerRecord.value(), metadata.offset());
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
